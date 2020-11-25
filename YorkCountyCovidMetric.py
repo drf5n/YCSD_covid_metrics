@@ -13,7 +13,7 @@
 # -- David Forrest
 # 
 
-# In[1]:
+# In[ ]:
 
 
 get_ipython().run_line_magic('matplotlib', 'widget')
@@ -28,14 +28,14 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[2]:
+# In[ ]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[6]:
+# In[ ]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -46,7 +46,7 @@ if file_age(df_name) > 86400:
     pathlib.Path(df_name).touch()
 
 
-# In[7]:
+# In[ ]:
 
 
 df=pd.read_csv(df_name)
@@ -55,7 +55,7 @@ df["date"] = pd.to_datetime(df['Report Date'])
 df.tail()
 
 
-# In[8]:
+# In[ ]:
 
 
 
@@ -68,21 +68,21 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[9]:
+# In[ ]:
 
 
 # subset for York and normalize per capita
 dfy = df[df['Locality']=='York'].copy()
-dfy['per100k_14daysum']=dfy['TC_sum14']*100000/67782  
+dfy['per100k_14daysum']=dfy['TC_sum14']*100000/68280  
 
 
-# In[10]:
+# In[ ]:
 
 
 dfy
 
 
-# In[11]:
+# In[ ]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -90,14 +90,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[12]:
+# In[ ]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[13]:
+# In[ ]:
 
 
 TOOLTIPS = [
@@ -146,13 +146,13 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[14]:
+# In[ ]:
 
 
 bokeh.plotting.show(p)
 
 
-# In[15]:
+# In[ ]:
 
 
 bokeh.plotting.output_file('YorkCountyCovidMetric_plot.html', mode='inline')
