@@ -79,7 +79,7 @@ dfy['per100k_14daysum']=dfy['TC_sum14']*100000/68280
 # In[7]:
 
 
-dfy
+dfy.tail(30)
 
 
 # In[8]:
