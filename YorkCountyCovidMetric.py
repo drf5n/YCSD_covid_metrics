@@ -41,7 +41,7 @@ def file_age(filepath):
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 df_name = "VA_vdh_casedata.csv"
-if file_age(df_name) > 86400:
+if file_age(df_name) > 86400/2:
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 
@@ -162,7 +162,7 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="YorkCountyCovidMetric_plot.png")
 
 
-# In[13]:
+# In[ ]:
 
 
 # Save notebook as a python script:
