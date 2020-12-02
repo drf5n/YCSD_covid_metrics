@@ -131,8 +131,8 @@ p.add_tools(hth)
 #hover(tooltips=TOOLTIPS,
 #)
 
-p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=5, fill_alpha=0.4, fill_color='olive'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=5,top=20, fill_alpha=0.4, fill_color='green'))
+p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=5, fill_alpha=0.4, fill_color='teal'))
+p.add_layout(bokeh.models.BoxAnnotation(bottom=5,top=20, fill_alpha=0.4, fill_color='lightgreen'))
 p.add_layout(bokeh.models.BoxAnnotation(bottom=20,top=50, fill_alpha=0.4, fill_color='yellow'))
 p.add_layout(bokeh.models.BoxAnnotation(bottom=50,top=200, fill_alpha=0.4, fill_color='orange'))
 p.add_layout(bokeh.models.BoxAnnotation(bottom=200, fill_alpha=0.4, fill_color='red'))
@@ -162,7 +162,7 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="YorkCountyCovidMetric_plot.png")
 
 
-# In[ ]:
+# In[13]:
 
 
 # Save notebook as a python script:
