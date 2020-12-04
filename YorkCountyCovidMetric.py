@@ -110,7 +110,7 @@ TOOLTIPS = [
 
 
 #p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,250),
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,260),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="York County Number of new cases per 100,000 persons within the last 14 days")
 
