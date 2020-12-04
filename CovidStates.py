@@ -20,17 +20,25 @@
 # * Light Orange: Moderate, >5cases/28days/100kpop -- Travelers at increased risk for severe illness from COVID-19 should avoid all nonessential travel...
 # * Yellow: Low, <5cases/28days/100kpop -- All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.
 # 
+# I was successful, and I have posted this notebook on Github at https://github.com/drf5n/YCSD_covid_metrics/blob/master/CovidStates.ipynb with the map published on https://drf5n.github.io/ and https://drf5n.github.io/us_covid_states_map.html  It looks like this:
 # 
+# ![image.png](attachment:02decef1-273c-419d-a7ac-87761f332983.png)
+# 
+# Every single state in the US is above the 100cases/28days/100kpop level of COVID transmission that, for CDC foreign travel advisories, is in the "Level 4, Very High: Travelers should avoid all travel" range.  
+# 
+# The school transmission risk criteria is 4x more lax, with a the highest risk level allowing twice the cases in half the time: 200cases/14days/100kpop. Under the school criteria, only Vermont, at 174 cases/14days/100kpop, and Hawaii at 99cases/14days/100kpop aren't above the highest risk threshold for school transmission.
+# 
+# -- drf 2020-12-04
 
-# In[55]:
+# In[1]:
 
 
-import os,geopandas, folium
+import os,geopandas, folium,datetime
 import branca # for a colorscale
 import pandas as pd
 
 
-# In[54]:
+# In[2]:
 
 
 # Downloaded state data from https://github.com/python-visualization/folium/blob/master/examples/data/us-states.json
@@ -38,7 +46,7 @@ state_json=os.path.join('/Users/drf/Downloads/', 'us-states.json')
 state = geopandas.read_file(state_json)
 
 
-# In[26]:
+# In[3]:
 
 
 # #downloaded population data from Census https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/
@@ -49,7 +57,7 @@ pops = pd.read_csv(census_pop_state_file)
 #display(pops)
 
 
-# In[53]:
+# In[4]:
 
 
 # map 2-letter codes to population data using https://github.com/drf5n/fips-codes/blob/patch-1/state_fips_master.csv modded from 
@@ -59,7 +67,7 @@ pop_augment = pops.set_index('STATE').join(statemaster.set_index('state')['state
 display(pop_augment)
 
 
-# In[14]:
+# In[5]:
 
 
 # Download the state-level covid case histories from...  
@@ -71,25 +79,39 @@ display(covids)
 
 
 
-# In[181]:
+# In[6]:
+
+
+lastdate = int(covids.tail(1).date) # last day in file
+#doi = lastdate # (bad as updates happen)
+doi = int((datetime.datetime.now()-datetime.timedelta(days = 1)
+         ).strftime("%Y%m%d"))  # yesterday morning as an int
+display(doi)
+
+
+# In[7]:
 
 
 df = covids.sort_values(by=['state', 'date'])
-#display(df.tail())
+display(df)
 
 df['TC_diff']= df.groupby('state')['positive'].diff().fillna(0)
 df['TC_sum14']= df.groupby('state')['positive'].diff(14).fillna(0)
 df['TC_sum28']= df.groupby('state')['positive'].diff(28).fillna(0)
 
-dfy = df[df['date']==20201202].copy()
+display(df)
+
+dfy = df[df['date']==doi].copy()
+display("DFY:",dfy)
+
 dfya = dfy.set_index('state').join(pop_augment.set_index('state_abbr'),lsuffix='lj').reset_index()
 
 dfya['per100k_14daysum']=dfya['TC_sum14']*100000/dfya['POPESTIMATE2019']
 dfya['per100k_28daysum']=dfya['TC_sum28']*100000/dfya['POPESTIMATE2019']
 dfya['per100k_1daysum']=dfya['TC_diff']*100000/dfya['POPESTIMATE2019']
-#display(dfya.columns)
+display(dfya.columns)
 
-#display(dfya[['state','date','per100k_1daysum','per100k_14daysum', 'per100k_28daysum']])
+display(dfya[['state','date','per100k_1daysum','per100k_14daysum', 'per100k_28daysum']])
 
 dfya['foreign']= pd.cut(dfya['per100k_28daysum'],
                        bins=[-1,5,20,100,50000],
@@ -108,13 +130,15 @@ dfya['school']= pd.cut(dfya['per100k_14daysum'],
                               ]).astype(str)
 
 
+display(dfya.head())
+
 file_state_covid='USCovidStates.geojson'
 gjson = state.set_index('id').join(dfya[['state','date','positive','POPESTIMATE2019','per100k_1daysum','per100k_14daysum', 'per100k_28daysum','foreign','school']].set_index('state'))
 gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[154]:
+# In[8]:
 
 
 #Make some colorscales
@@ -144,11 +168,20 @@ display(colorscale_28.to_linear())
 
 
 
-# In[186]:
+# In[9]:
 
 
 # Make a map out of it:
 m = folium.Map(location=[37.9, -90], zoom_start=4)
+
+
+loc = """US States COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
+      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories</a>"""
+title_html = '''
+             <h3 align="center" style="font-size:16px"><b>{}</b></h3>
+             <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
+             '''.format(loc)   
+
 
 display(gjson.columns)
 
@@ -167,11 +200,13 @@ folium.GeoJson(
     style_function=style_function_28,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['name',"date",'per100k_28daysum',"POPESTIMATE2019",'foreign','school'],
-        aliases=['State','Date','Cases/28d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
+        fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
+        aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
     
 ).add_to(m)
 m.add_child(colorscale_28)
+m.get_root().html.add_child(folium.Element(title_html))
+
 m.save('us_covid_states_map.html')
 m
 
