@@ -8,15 +8,15 @@
 # * YCSD presents there metrics on https://ycsd.yorkcountyschools.org/domain/1313
 # * VDH represents the this number for the localities on https://www.vdh.virginia.gov/coronavirus/coronavirus/covid-19-in-virginia-locality/ and on https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/ under the localities tab
 # * VDH shares the data at https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
-# * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics
+# * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics and https://github.com/drf5n/YCSD_covid_metrics/blob/master/YorkCountyCovidMetric.ipynb
 # 
-# -- David Forrest
+# -- David Forrest 2020-12-04
 # 
 
 # In[1]:
 
 
-get_ipython().run_line_magic('matplotlib', 'widget')
+# %matplotlib widget
 import os,sys,io, time, pathlib
 import pandas as pd
 #import numpy as np, matplotlib as mpl, matplotlib.pyplot as plt
@@ -152,14 +152,14 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 bokeh.plotting.show(p)
 
 
-# In[12]:
+# In[15]:
 
 
-bokeh.plotting.output_file('YorkCountyCovidMetric_plot.html', mode='inline')
+bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
 bokeh.plotting.save(p)
 
 # needs geckodriver  -- have it in conda env py3plot
-bokeh.io.export_png(p, filename="YorkCountyCovidMetric_plot.png")
+bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
 # In[13]:

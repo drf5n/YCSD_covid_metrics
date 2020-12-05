@@ -8,15 +8,15 @@
 # * YCSD presents there metrics on https://ycsd.yorkcountyschools.org/domain/1313
 # * VDH represents the this number for the localities on https://www.vdh.virginia.gov/coronavirus/coronavirus/covid-19-in-virginia-locality/ and on https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/ under the localities tab
 # * VDH shares the data at https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
-# * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics
+# * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics and https://drf5n.github.io/
 # 
 # -- David Forrest
 # 
 
-# In[60]:
+# In[1]:
 
 
-get_ipython().run_line_magic('matplotlib', 'widget')
+# %matplotlib widget
 import os,sys,io, time, pathlib,datetime
 import pandas as pd, numpy as np
 #import numpy as np, matplotlib as mpl, matplotlib.pyplot as plt
@@ -38,7 +38,7 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[162]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -49,7 +49,7 @@ if file_age(df_name) > 86400:
     pathlib(dfname).touch()
 
 
-# In[163]:
+# In[4]:
 
 
 df=pd.read_csv(df_name)
@@ -60,7 +60,7 @@ if not df.iloc[-1]['Report Date'] == today_str:
     df.tail()
 
 
-# In[164]:
+# In[5]:
 
 
 # get the daily and 14 day sums for each locality
@@ -69,11 +69,12 @@ display(df.head())
 
 df['TC_diff']= df.groupby('Locality')['Total Cases'].diff().fillna(0)
 df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
+df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 
 display(df.tail())
 
 
-# In[165]:
+# In[6]:
 
 
 # subset for York and normalize per capita
@@ -81,13 +82,13 @@ dfy = df[df['Locality']=='York'].copy()
 dfy['per100k_14daysum']=dfy['TC_sum14']*100000/67782  
 
 
-# In[166]:
+# In[7]:
 
 
 dfy
 
 
-# In[167]:
+# In[8]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -95,14 +96,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[168]:
+# In[9]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[171]:
+# In[10]:
 
 
 TOOLTIPS = [
@@ -151,13 +152,13 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[172]:
+# In[11]:
 
 
 bokeh.plotting.show(p)
 
 
-# In[173]:
+# In[12]:
 
 
 #bokeh.plotting.output_file('YorkCountyCovidMetric_plot.html', mode='inline')
@@ -167,14 +168,14 @@ bokeh.plotting.show(p)
 #bokeh.io.export_png(p, filename="YorkCountyCovidMetric_plot.png")
 
 
-# In[174]:
+# In[13]:
 
 
 ## Save notebook as a python script:
 #! jupyter nbconvert --to script AllCountyCovidMetric.ipynb
 
 
-# In[175]:
+# In[14]:
 
 
 # Collect populations
@@ -183,19 +184,19 @@ coest['FIPS']=coest['STATE']*1000+coest['COUNTY']
 coest['FIPSstr']=coest['FIPS'].astype(str)
 
 
-# In[176]:
+# In[15]:
 
 
 coestva=coest[coest['STNAME']=="Virginia"].copy()
 
 
-# In[177]:
+# In[16]:
 
 
 coestva.FIPS.iloc[0]
 
 
-# In[178]:
+# In[17]:
 
 
 pd.set_option('display.max_rows', 500)
@@ -203,7 +204,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[179]:
+# In[31]:
 
 
 # Normalize by population
@@ -215,6 +216,7 @@ dfpop = pd.merge(df,coestva[['FIPS','FIPSstr','CTYNAME','POPESTIMATE2019']], lef
 #dfpop.set_index(['Locality','Report Date'],inplace=True)
 
 dfpop['caseP14P100k']=dfpop['TC_sum14']/dfpop['POPESTIMATE2019']*100000
+dfpop['caseP28P100k']=dfpop['TC_sum28']/dfpop['POPESTIMATE2019']*100000
 
 
 today_pop=dfpop[dfpop['Report Date']==today_str].copy()
@@ -230,7 +232,7 @@ display(today_pop.sort_values(by=['rank']))
 
 
 
-# In[180]:
+# In[19]:
 
 
 # from http://docs.bokeh.org/en/0.11.0/docs/gallery/choropleth.html
@@ -256,7 +258,7 @@ if 0: # bokeh chorpleths are less rich than folium annoated geojsons
     colors = ["#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043"]
 
 
-# In[181]:
+# In[20]:
 
 
 if 0:
@@ -286,7 +288,7 @@ if 0:
     show(p)
 
 
-# In[182]:
+# In[21]:
 
 
 
@@ -324,13 +326,13 @@ if 0:
 #folium.LayerControl().add_to(m)
 
 
-# In[183]:
+# In[22]:
 
 
 state = geopandas.read_file(state_geo)
 
 
-# In[186]:
+# In[33]:
 
 
 today_pop
@@ -341,13 +343,35 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[185]:
+# In[36]:
+
+
+x['foreign']= pd.cut(x['caseP28P100k'],
+                       bins=[-1,5,20,100,50000],
+                       labels=['Level 1, Low:  All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.',
+                                'Level 2, Moderate: Travelers at increased risk for severe illness from COVID-19 should avoid all nonessential travel.',
+                                'Level 3, High: Travelers should avoid all nonessential travel',
+                                'Level 4, Very High: Travelers should avoid all travel',
+                              ]).astype(str)
+x['school']= pd.cut(x['caseP14P100k'],
+                       bins=[-1,5,20,50,200,50000],
+                       labels=['Lowest risk of transmission in schools',
+                                'Lower risk of transmission in schools',
+                                'Moderate risk of transmission in schools',
+                                'Higher risk of transmission in schools',
+                                'Highest risk of transmission in schools',
+                              ]).astype(str)
+
+x.tail()
+
+
+# In[24]:
 
 
 state.tail()
 
 
-# In[37]:
+# In[25]:
 
 
 import branca # for a colorscale
@@ -380,7 +404,13 @@ def style_function(feature):
 colorscale
 
 
-# In[38]:
+# In[32]:
+
+
+
+
+
+# In[43]:
 
 
 
@@ -391,98 +421,55 @@ x.to_file("vaCovidCounties.geojson", driver='GeoJSON')
 # Make a map out of it:
 m = folium.Map(location=[37.9, -77.9], zoom_start=7)
 
+loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
+      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories</a>"""
+title_html = '''
+             <h3 align="center" style="font-size:16px"><b>{}</b></h3>
+             <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
+             '''.format(loc)   
+
 folium.GeoJson(
     "vaCovidCounties.geojson",
     name='geojson',
     style_function=style_function,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['Locality',"VDH Health District",'caseP14P100k','date',"POPESTIMATE2019"]),
-    
+        fields=['Locality','date',"VDH Health District",'caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+   #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
+   #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
+         aliases=['Locality','Date','VDH District','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+    ),    
 ).add_to(m)
 m.add_child(colorscale)
-m.save('va_counties_map.html')
+m.get_root().html.add_child(folium.Element(title_html))
+m.save('docs/va_counties_map.html')
 m
 
 
-# In[39]:
+# In[27]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[31]:
+# In[49]:
 
 
-pd.describe_option('display')
+#pd.describe_option('display')
 
 
-# In[57]:
-
-
-x = pd.DataFrame({'x': [1, 2, 3], 'y': [3, 4, 5]})
-
-x.iloc[1] = { 'y': 99}
-
-x
-
-
-# In[86]:
-
-
-dates = pd.date_range('1/1/2000', periods=21)
-np.random.seed(19640607)
-display(np.random.get_state())
-df = pd.DataFrame(np.random.randn(len(dates), 4),
-                   index=dates, columns=['A', 'B', 'C', 'D'])
-df
-
-
-# In[ ]:
-
-
-
-
-
-# In[80]:
-
-
-s=df.A
-s
-
-
-# In[68]:
-
-
-s[::3]
-
-
-# In[112]:
-
-
-rg1 = np.random.Generator(np.random.MT19937(12345))
-rg2 = np.random.Generator(np.random.MT19937(12346))
-rg3 = np.random.Generator(np.random.MT19937(np.random.SeedSequence().entropy))
-
-
-# In[113]:
-
-
-display([rg1.random(),rg2.random(),rg3.random()])
-
-
-# In[102]:
-
-
-np.random.SeedSequence().entropy
-
-
-# In[138]:
+# In[48]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
 popxls['FIPS']=51000+popxls.loc[:,'Code']
-popxls
+popxls.head()
+
+
+# In[54]:
+
+
+type(m.get_root().html)
 
 
 # In[ ]:
