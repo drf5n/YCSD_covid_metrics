@@ -46,7 +46,7 @@ def file_age(filepath):
 df_name = "VA_vdh_casedata.csv"
 if file_age(df_name) > 86400:
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
-    pathlib(dfname).touch()
+    pathlib(df_name).touch()
 
 
 # In[4]:
@@ -204,7 +204,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[31]:
+# In[18]:
 
 
 # Normalize by population
@@ -332,7 +332,7 @@ if 0:
 state = geopandas.read_file(state_geo)
 
 
-# In[33]:
+# In[23]:
 
 
 today_pop
@@ -343,7 +343,7 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[36]:
+# In[24]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
@@ -365,13 +365,13 @@ x['school']= pd.cut(x['caseP14P100k'],
 x.tail()
 
 
-# In[24]:
+# In[25]:
 
 
 state.tail()
 
 
-# In[25]:
+# In[26]:
 
 
 import branca # for a colorscale
@@ -404,13 +404,13 @@ def style_function(feature):
 colorscale
 
 
-# In[32]:
+# In[ ]:
 
 
 
 
 
-# In[43]:
+# In[27]:
 
 
 
@@ -446,19 +446,19 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[27]:
+# In[28]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[49]:
+# In[29]:
 
 
 #pd.describe_option('display')
 
 
-# In[48]:
+# In[30]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -466,7 +466,7 @@ popxls['FIPS']=51000+popxls.loc[:,'Code']
 popxls.head()
 
 
-# In[54]:
+# In[31]:
 
 
 type(m.get_root().html)
