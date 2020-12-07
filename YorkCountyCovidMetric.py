@@ -152,7 +152,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 bokeh.plotting.show(p)
 
 
-# In[15]:
+# In[12]:
 
 
 bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
