@@ -97,7 +97,7 @@ ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100
 ph
 
 
-# In[10]:
+# In[14]:
 
 
 TOOLTIPS = [
@@ -110,7 +110,7 @@ TOOLTIPS = [
 
 
 #p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,260),
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,300),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="York County Number of new cases per 100,000 persons within the last 14 days")
 
@@ -146,7 +146,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[11]:
+# In[15]:
 
 
 bokeh.plotting.show(p)
