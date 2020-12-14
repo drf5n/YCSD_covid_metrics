@@ -97,7 +97,7 @@ ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100
 ph
 
 
-# In[14]:
+# In[10]:
 
 
 TOOLTIPS = [
@@ -146,7 +146,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[15]:
+# In[11]:
 
 
 bokeh.plotting.show(p)
