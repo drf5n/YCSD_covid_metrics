@@ -103,7 +103,7 @@ ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100
 ph
 
 
-# In[10]:
+# In[31]:
 
 
 TOOLTIPS = [
@@ -116,7 +116,7 @@ TOOLTIPS = [
 
 
 #p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,250),
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,300),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="York County Number of new cases per 100,000 persons within the last 14 days")
 
@@ -152,7 +152,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[11]:
+# In[32]:
 
 
 bokeh.plotting.show(p)
@@ -462,11 +462,11 @@ x.loc['51775']['caseP14P100k']
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
-popxls['FIPS']=51000+popxls.loc[:,'Code']
+popxls['FIPS']=int(51000+popxls.loc[:,'Code'])
 popxls.head()
 
 
-# In[31]:
+# In[ ]:
 
 
 type(m.get_root().html)
