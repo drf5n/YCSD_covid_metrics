@@ -103,7 +103,7 @@ ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100
 ph
 
 
-# In[31]:
+# In[10]:
 
 
 TOOLTIPS = [
@@ -152,7 +152,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[32]:
+# In[11]:
 
 
 bokeh.plotting.show(p)
@@ -204,7 +204,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[18]:
+# In[50]:
 
 
 # Normalize by population
@@ -214,6 +214,8 @@ dfpop = pd.merge(df,coestva[['FIPS','FIPSstr','CTYNAME','POPESTIMATE2019']], lef
                       right_on=['FIPS'],
                       how='left', sort=False)
 #dfpop.set_index(['Locality','Report Date'],inplace=True)
+
+#display(dfpop)
 
 dfpop['caseP14P100k']=dfpop['TC_sum14']/dfpop['POPESTIMATE2019']*100000
 dfpop['caseP28P100k']=dfpop['TC_sum28']/dfpop['POPESTIMATE2019']*100000
@@ -458,12 +460,12 @@ x.loc['51775']['caseP14P100k']
 #pd.describe_option('display')
 
 
-# In[30]:
+# In[49]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
-popxls['FIPS']=int(51000+popxls.loc[:,'Code'])
-popxls.head()
+popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate NaNs above?
+popxls.tail()
 
 
 # In[ ]:

@@ -13,7 +13,7 @@
 # -- David Forrest 2020-12-04
 # 
 
-# In[2]:
+# In[1]:
 
 
 # %matplotlib widget
@@ -28,25 +28,25 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[3]:
+# In[2]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[15]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 df_name = "VA_vdh_casedata.csv"
-if 1 or file_age(df_name) > 86400/2:
+if file_age(df_name) > 86400/2:
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 
 
-# In[16]:
+# In[4]:
 
 
 df=pd.read_csv(df_name)
@@ -55,7 +55,7 @@ df["date"] = pd.to_datetime(df['Report Date'])
 df.tail()
 
 
-# In[17]:
+# In[5]:
 
 
 
@@ -68,7 +68,7 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[18]:
+# In[6]:
 
 
 # subset for York and normalize per capita
@@ -76,13 +76,13 @@ dfy = df[df['Locality']=='York'].copy()
 dfy['per100k_14daysum']=dfy['TC_sum14']*100000/68280  
 
 
-# In[19]:
+# In[7]:
 
 
 dfy.tail(30)
 
 
-# In[20]:
+# In[8]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -90,14 +90,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[21]:
+# In[9]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[22]:
+# In[16]:
 
 
 TOOLTIPS = [
@@ -110,7 +110,7 @@ TOOLTIPS = [
 
 
 #p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,300),
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,350),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="York County Number of new cases per 100,000 persons within the last 14 days")
 
@@ -146,7 +146,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[23]:
+# In[17]:
 
 
 bokeh.plotting.show(p)
