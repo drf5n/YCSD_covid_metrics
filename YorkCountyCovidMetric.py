@@ -68,21 +68,43 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[6]:
+# In[73]:
+
+
+popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
+popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate NaNs above?
+display(popxls[popxls['Code']==810]['Population'])
+display(popxls['Locality'].str.match('York County').fillna(False))
+display(popxls[popxls['Locality'].str.match('York County').fillna(False)])
+display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
+display(popxls[popxls['Locality'].str.contains('City').fillna(False)])
+
+
+# In[52]:
 
 
 # subset for York and normalize per capita
+loi='York'
+
 dfy = df[df['Locality']=='York'].copy()
 dfy['per100k_14daysum']=dfy['TC_sum14']*100000/68280  
 
+# for VB:
 
-# In[7]:
+if 0:
+    loi='Virginia Beach'
+
+    dfy = df[df['Locality']=='Virginia Beach'].copy()
+    dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
+
+
+# In[53]:
 
 
 dfy.tail(30)
 
 
-# In[8]:
+# In[46]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -90,14 +112,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[9]:
+# In[47]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[16]:
+# In[54]:
 
 
 TOOLTIPS = [
@@ -110,9 +132,9 @@ TOOLTIPS = [
 
 
 #p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,350),
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,550),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
-                        title="York County Number of new cases per 100,000 persons within the last 14 days")
+                        title="{} Number of new cases per 100,000 persons within the last 14 days".format(loi))
 
     
 hth = bokeh.models.HoverTool(tooltips=TOOLTIPS,
@@ -146,7 +168,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[17]:
+# In[55]:
 
 
 bokeh.plotting.show(p)
