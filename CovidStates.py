@@ -177,7 +177,7 @@ display(colorscale_28l)
 
 
 
-# In[54]:
+# In[55]:
 
 
 # Make a map out of it:
@@ -216,7 +216,7 @@ folium.GeoJson(
 m.add_child(colorscale_28l)
 m.get_root().html.add_child(folium.Element(title_html))
 
-#m.save('us_covid_states_map.html')
+m.save('docs/us_covid_states_map.html')
 m
 
 

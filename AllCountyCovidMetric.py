@@ -1,19 +1,32 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Time Series of YCSD Covid Case Metric
+# # Covid Case Metrics for Virginia Counties
 # 
-# This notebook examines the time series of the York County COVID Cases ostensibly used by YCSD to make decisions about school reopenings.
+# This notebook examines the COVID Cases in Virginia and compares them to the CDC's School Transmission Risk thresholds and the CDC's Foreign travel risk thresholds.
 # 
-# * YCSD presents there metrics on https://ycsd.yorkcountyschools.org/domain/1313
-# * VDH represents the this number for the localities on https://www.vdh.virginia.gov/coronavirus/coronavirus/covid-19-in-virginia-locality/ and on https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/ under the localities tab
+# * YCSD presents their school metrics on https://ycsd.yorkcountyschools.org/domain/1313
+# * VDH represents the this number for the localities on https://www.vdh.virginia.gov/coronavirus/coronavirus/covid-19-in-virginia-locality/ and on https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/ The threshold for "Highest risk of tranmission in schools is 200cases/14days/100k.
 # * VDH shares the data at https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
-# * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics and https://drf5n.github.io/
+# * The CDC Foreign travel page is https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html -- the threshold for "Level 4, Very High: Avoid all travel" is 100cases/28days/100k.
+# * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics and the graphics at https://drf5n.github.io/YCSD_covid_metrics/index.html
+# 
+# The CDC's highest school transmission risk level is 1/4 as strict as the CDC's foreign travel threshold, with half the sampling period (14 days vs 28 days) and twice the numerical limit (200cases/100k vs 100cases/100k)
+# 
+# Nearly all of the Virginia counties are far into the "Highest risk of transmission in schools"
+# 
+# ![image.png](attachment:1647839b-428d-4bc1-8301-cb7335a0951b.png)
+# 
+# (Live map at https://drf5n.github.io/YCSD_covid_metrics/va_counties_map.html)
+# 
+# ![image.png](attachment:c1184ad6-33e3-44de-8b91-adaabd2469b0.png)
+# 
+# (Live map at https://drf5n.github.io/YCSD_covid_metrics/va_counties_map_foreign.html)
 # 
 # -- David Forrest
 # 
 
-# In[1]:
+# In[46]:
 
 
 # %matplotlib widget
@@ -28,17 +41,17 @@ import bokeh.io
 import bokeh.models
 from bokeh.io import output_notebook
 bokeh.io.output_notebook()
-today_str=datetime.datetime.now().strftime("%m/%d/%Y")
+today_str=(datetime.datetime.now()-datetime.timedelta(hours=4)).strftime("%m/%d/%Y")
 
 
-# In[2]:
+# In[47]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[48]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -49,7 +62,7 @@ if file_age(df_name) > 86400:
     pathlib(df_name).touch()
 
 
-# In[4]:
+# In[49]:
 
 
 df=pd.read_csv(df_name)
@@ -67,6 +80,7 @@ if not df.iloc[-1]['Report Date'] == today_str:
 df = df.sort_values(by=['Locality', 'VDH Health District', 'date'])
 display(df.head())
 
+# get the 1day, 14 day, and 28day sums:
 df['TC_diff']= df.groupby('Locality')['Total Cases'].diff().fillna(0)
 df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
@@ -74,111 +88,10 @@ df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 display(df.tail())
 
 
-# In[6]:
-
-
-# subset for York and normalize per capita
-dfy = df[df['Locality']=='York'].copy()
-dfy['per100k_14daysum']=dfy['TC_sum14']*100000/67782  
-
-
-# In[7]:
-
-
-dfy
-
-
-# In[8]:
-
-
-ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
-
-ph
-
-
-# In[9]:
-
-
-ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
-ph
-
-
-# In[10]:
-
-
-TOOLTIPS = [
- #   ("index", "$index"),
- #   ("date:", "$x{%F %T}"),
-    ("date:", "@date{%F}"),
-    ("cases/14d/100k:","@per100k_14daysum"),
- #   ("(x,y)", "($x, $y)"),
-]
-
-
-#p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,300),
-#                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
-                        title="York County Number of new cases per 100,000 persons within the last 14 days")
-
-    
-hth = bokeh.models.HoverTool(tooltips=TOOLTIPS,
-                             formatters={"$x": "datetime",
-                                        "@date": "datetime"
-                                        },
-                             mode='vline',
-                            )
-
-print(hth)
-print(hth.formatters)
-p.add_tools(hth)
-#hover = p.select(dict(type=bokeh.models.HoverTool))
-
-
-#hover(tooltips=TOOLTIPS,
-#)
-
-p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=5, fill_alpha=0.4, fill_color='olive'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=5,top=20, fill_alpha=0.4, fill_color='green'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=20,top=50, fill_alpha=0.4, fill_color='yellow'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=50,top=200, fill_alpha=0.4, fill_color='orange'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=200, fill_alpha=0.4, fill_color='red'))
-
-
-
-#p.line(dfy['date'],dfy['per100k_14daysum'])
-p.line(x='date', y='per100k_14daysum',source=dfy)
-#p.title()
-
-#?p.line
-
-
-# In[11]:
-
-
-bokeh.plotting.show(p)
-
-
-# In[12]:
-
-
-#bokeh.plotting.output_file('YorkCountyCovidMetric_plot.html', mode='inline')
-#bokeh.plotting.save(p)
-
-# needs geckodriver  -- have it in conda env py3plot
-#bokeh.io.export_png(p, filename="YorkCountyCovidMetric_plot.png")
-
-
-# In[13]:
-
-
-## Save notebook as a python script:
-#! jupyter nbconvert --to script AllCountyCovidMetric.ipynb
-
-
 # In[14]:
 
 
-# Collect populations
+# Use population estimates from https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/ 
 coest= pd.read_csv("/Users/drf/Downloads/co-est2019-alldata.csv", encoding='latin-1')
 coest['FIPS']=coest['STATE']*1000+coest['COUNTY']
 coest['FIPSstr']=coest['FIPS'].astype(str)
@@ -187,6 +100,7 @@ coest['FIPSstr']=coest['FIPS'].astype(str)
 # In[15]:
 
 
+# subset for Virginia
 coestva=coest[coest['STNAME']=="Virginia"].copy()
 
 
@@ -207,7 +121,7 @@ display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 # In[18]:
 
 
-# Normalize by population
+# Normalize Covid cases by population
 
 display(df.columns)
 dfpop = pd.merge(df,coestva[['FIPS','FIPSstr','CTYNAME','POPESTIMATE2019']], left_on=['FIPS'], 
@@ -226,12 +140,6 @@ today_pop['rank']=(-today_pop['caseP14P100k']).rank()
 
 display(today_pop.tail(1))
 display(today_pop.sort_values(by=['rank']))
-
-
-# In[ ]:
-
-
-
 
 
 # In[19]:
@@ -305,7 +213,6 @@ state_geo = os.path.join('/Users/drf/Downloads/', 'counties.geojson')
 #state_data = pd.read_csv(state_unemployment)
 
 # Initialize the map:
-
 
 # folium choropleths are less rich than annotated geojsons
 # Add the color for the chloropleth:
@@ -433,7 +340,7 @@ colorscale28
 colorscale.caption
 
 
-# In[28]:
+# In[41]:
 
 
 
@@ -444,12 +351,14 @@ x.to_file("vaCovidCounties.geojson", driver='GeoJSON')
 # Make a map out of it:
 m = folium.Map(location=[37.9, -77.9], zoom_start=7)
 
-loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
-      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (school colors)"""
+loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (school colors)"""
+subt = """(Red is CDC >200cases/14days/100k, "Highest Risk of Transmission in schools" and Black is 5x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
-             <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
-             '''.format(loc)   
+             <h4 align="center" style="font-size:12px"><b>{}</b></h4>
+             
+             <a href="https://github.com/drf5n/YCSD_covid_metrics/">(source code)</a>
+             '''.format(loc,subt)   
 
 folium.GeoJson(
     "vaCovidCounties.geojson",
@@ -469,7 +378,7 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[29]:
+# In[39]:
 
 
 
@@ -480,12 +389,15 @@ x.to_file("vaCovidCounties.geojson", driver='GeoJSON')
 # Make a map out of it:
 m = folium.Map(location=[37.9, -77.9], zoom_start=7)
 
-loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
-      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (CDC Foreign Travel scale)"""
+loc = """Virginia COVID risk colored per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
+       Risk Categories """
+subt = """(Red is CDC Level 4: >100cases/28days/100k, Very High, Avoid all travel" and Black is 10x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
-             <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
-             '''.format(loc)   
+             <h4 align="center" style="font-size:12px"><b>{}</b></h4>
+             
+             <a href="https://github.com/drf5n/YCSD_covid_metrics/">(source code)</a>
+             '''.format(loc,subt)   
 
 folium.GeoJson(
     "vaCovidCounties.geojson",
