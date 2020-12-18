@@ -10,7 +10,7 @@ that is derived from the data behind these sources:
 Also the US
 
 
-The resultant plot is: ![YCSD Case Metric Time Series](YorkCountyCovidMetric_plot.png) with the interactive in [YorkCountyCovidMetric_plot.html](YorkCountyCovidMetric_plot.html)
+The resultant plot is: ![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png) with the interactive in [YorkCountyCovidMetric_plot.html](docs/YorkCountyCovidMetric_plot.html)
 
 
 See these live maps and graphs at https://drf5n.github.io/YCSD_covid_metrics/index.html 
