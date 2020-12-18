@@ -68,7 +68,7 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[73]:
+# In[16]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -80,14 +80,21 @@ display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
 display(popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[52]:
+# In[28]:
 
 
 # subset for York and normalize per capita
 loi='York'
 
+VDH_pop = int(popxls[popxls['Locality'].str.match('York').fillna(False)]['Population'])
+display("VDH_pop: ",VDH_pop)
+
+
 dfy = df[df['Locality']=='York'].copy()
 dfy['per100k_14daysum']=dfy['TC_sum14']*100000/68280  
+dfy['per100k_14daysum']=dfy['TC_sum14']*100000/VDH_pop
+
+
 
 # for VB:
 
@@ -98,13 +105,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[53]:
+# In[29]:
 
 
 dfy.tail(30)
 
 
-# In[46]:
+# In[30]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -112,14 +119,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[47]:
+# In[31]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[54]:
+# In[34]:
 
 
 TOOLTIPS = [
@@ -132,7 +139,7 @@ TOOLTIPS = [
 
 
 #p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,550),
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,400),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="{} Number of new cases per 100,000 persons within the last 14 days".format(loi))
 
@@ -168,13 +175,13 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[55]:
+# In[35]:
 
 
 bokeh.plotting.show(p)
 
 
-# In[12]:
+# In[13]:
 
 
 bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
@@ -184,7 +191,7 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[19]:
+# In[14]:
 
 
 # Save notebook as a python script:
