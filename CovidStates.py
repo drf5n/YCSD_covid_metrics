@@ -138,7 +138,7 @@ gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[8]:
+# In[53]:
 
 
 #Make some colorscales
@@ -149,9 +149,16 @@ colorscale = branca.colormap.linear.YlOrRd_09.scale(0, 200)
 colorscale = branca.colormap.linear.YlOrRd_09.to_step(index=[0,5,20,50, 200,500, 1000])
 
 colorscale_28 = branca.colormap.StepColormap(
-    ['yellow','orange','darkorange','red','red','black'], 
-    index=[0,5,50,100,4000,5000], caption='New Cases/28days/100k',vmin=0, vmax=200,
+    ['yellow','orange','darkorange','red','red','#440000'], 
+    index=[0,5,50,100,500,3000], caption='New Cases/28days/100k (red > 100, Very High)',vmin=0, vmax=3000,
 )
+
+colorscale_28l = branca.colormap.StepColormap(
+    ['yellow','orange','darkorange','red','red','#440000'], 
+    index=[0,5,50,100,110,3000], caption='New Cases/28days/100k',vmin=0, vmax=3000,
+).to_linear()
+colorscale_28l.caption=colorscale_28.caption
+
 
 colorscale_14 = branca.colormap.StepColormap(
     ['blue','green','yellow','orange','red','darkred','red','black'], 
@@ -163,12 +170,14 @@ colorscale_1 = branca.colormap.StepColormap(
     index=[0,5,20,50,200,201,1000,5000], caption='New Cases/28days/100k',vmin=0, vmax=400,
 )
 
+
 display(colorscale_28)
-display(colorscale_28.to_linear())
+display(colorscale_28l)
 
 
 
-# In[9]:
+
+# In[54]:
 
 
 # Make a map out of it:
@@ -191,7 +200,7 @@ def style_function_28(feature):
     return {
         'fillOpacity': 0.5,
         'weight': 0,
-        'fillColor': '#black' if y is None else colorscale_28(y)
+        'fillColor': '#black' if y is None else colorscale_28l(y)
     }
 
 folium.GeoJson(
@@ -204,7 +213,7 @@ folium.GeoJson(
         aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
     
 ).add_to(m)
-m.add_child(colorscale_28)
+m.add_child(colorscale_28l)
 m.get_root().html.add_child(folium.Element(title_html))
 
 m.save('us_covid_states_map.html')

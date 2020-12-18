@@ -162,11 +162,11 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[13]:
+# In[19]:
 
 
 # Save notebook as a python script:
-get_ipython().system(' jupyter nbconvert --to script *.ipynb')
+# ! jupyter nbconvert --to script *.ipynb
 
 
 # In[ ]:

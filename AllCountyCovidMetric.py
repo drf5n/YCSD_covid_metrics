@@ -204,7 +204,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[50]:
+# In[18]:
 
 
 # Normalize by population
@@ -388,31 +388,52 @@ county_geo = f'{url}/us_counties_20m_topo.json'
 colorscale = branca.colormap.linear.YlOrRd_09.scale(0, 200)
 colorscale = branca.colormap.linear.YlOrRd_09.to_step(index=[0,5,20,50, 200,500, 1000])
 colorscale = branca.colormap.StepColormap(
-    ['blue','green','yellow','orange','red','purple','black'], 
-    index=[0,5,20,50,200,500,1000], caption='caption',vmin=0, vmax=1200,
+    ['blue','green','yellow','orange','red','red','black'], 
+    index=[0,5,20,50,200,250,1000], caption='New Cases/14days/100k',vmin=0, vmax=1000,
 )
 
-colorscale=colorscale.to_linear()
+
+colorscale14=colorscale.to_linear()
+colorscale14.caption='New Cases/14days/100k'  # reset caption
 #employed_series = x.set_index('FIPSstr')['caseP14P100k']
 
-def style_function(feature):
+def style_function14(feature):
     y=feature['properties']['caseP14P100k']
    # print(feature)
     return {
         'fillOpacity': 0.5,
         'weight': 0,
-        'fillColor': '#black' if y is None else colorscale(y)
+        'fillColor': '#black' if y is None else colorscale14(y)
     }
-colorscale
+
+colorscale28 = branca.colormap.StepColormap(
+    ['blue','green','yellow','orange','red','red','black'], 
+    index=[0,5,20,50,100,250,1000], caption='New Cases/28days/100k',vmin=0, vmax=1000,
+).to_linear()
+colorscale28.caption='New Cases/28days/100k'  # reset caption
 
 
-# In[ ]:
+
+def style_function28(feature):
+    y=feature['properties']['caseP28P100k']
+   # print(feature)
+    return {
+        'fillOpacity': 0.5,
+        'weight': 0,
+        'fillColor': '#black' if y is None else colorscale28(y)
+    }
 
 
-
+colorscale28
 
 
 # In[27]:
+
+
+colorscale.caption
+
+
+# In[28]:
 
 
 
@@ -424,7 +445,7 @@ x.to_file("vaCovidCounties.geojson", driver='GeoJSON')
 m = folium.Map(location=[37.9, -77.9], zoom_start=7)
 
 loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
-      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories</a>"""
+      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (school colors)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
              <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
@@ -433,7 +454,7 @@ title_html = '''
 folium.GeoJson(
     "vaCovidCounties.geojson",
     name='geojson',
-    style_function=style_function,
+    style_function=style_function14,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
         fields=['Locality','date',"VDH Health District",'caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
@@ -442,25 +463,61 @@ folium.GeoJson(
          aliases=['Locality','Date','VDH District','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
     ),    
 ).add_to(m)
-m.add_child(colorscale)
+m.add_child(colorscale14)
 m.get_root().html.add_child(folium.Element(title_html))
 m.save('docs/va_counties_map.html')
 m
 
 
-# In[28]:
+# In[29]:
+
+
+
+#write the combined data to a file to be read
+x.to_file("vaCovidCounties.geojson", driver='GeoJSON')
+
+
+# Make a map out of it:
+m = folium.Map(location=[37.9, -77.9], zoom_start=7)
+
+loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
+      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (CDC Foreign Travel scale)"""
+title_html = '''
+             <h3 align="center" style="font-size:16px"><b>{}</b></h3>
+             <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
+             '''.format(loc)   
+
+folium.GeoJson(
+    "vaCovidCounties.geojson",
+    name='geojson',
+    style_function=style_function28,
+    highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
+    tooltip=folium.features.GeoJsonTooltip(
+        fields=['Locality','date',"VDH Health District",'caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+   #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
+   #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
+         aliases=['Locality','Date','VDH District','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+    ),    
+).add_to(m)
+m.add_child(colorscale28)
+m.get_root().html.add_child(folium.Element(title_html))
+m.save('docs/va_counties_map_foreign.html')
+m
+
+
+# In[30]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[29]:
+# In[31]:
 
 
 #pd.describe_option('display')
 
 
-# In[49]:
+# In[32]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -468,7 +525,7 @@ popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate N
 popxls.tail()
 
 
-# In[ ]:
+# In[33]:
 
 
 type(m.get_root().html)
