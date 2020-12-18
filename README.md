@@ -9,9 +9,7 @@ that is derived from the data behind these sources:
 
 Also the US
 
-[![Foo](http://www.google.com.au/images/nav_logo7.png)](http://google.com.au/)
-
-The resultant plot is: [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](docs/YorkCountyCovidMetric_plot.html) with the interactive in [YorkCountyCovidMetric_plot.html](docs/YorkCountyCovidMetric_plot.html)
+The resultant plot is: [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html).
 
 The resultant plot is: ![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png) with the interactive in [YorkCountyCovidMetric_plot.html](docs/YorkCountyCovidMetric_plot.html)
 
