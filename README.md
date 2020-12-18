@@ -11,8 +11,6 @@ Also the US
 
 The resultant plot is: [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html).
 
-The resultant plot is: ![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png) with the interactive in [YorkCountyCovidMetric_plot.html](docs/YorkCountyCovidMetric_plot.html)
-
 
 See these live maps and graphs at https://drf5n.github.io/YCSD_covid_metrics/index.html 
 
@@ -21,4 +19,4 @@ See these live maps and graphs at https://drf5n.github.io/YCSD_covid_metrics/ind
 * https://drf5n.github.io/YCSD_covid_metrics/us_covid_states_map.html -- US states colored by CDC foreign country travel risk
 * https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html -- CDC School Transmission Risk timeseries for York County, VA. 
 
--- Dave Forrest 2020-12-18
+-- Dave Forrest 2020-12-19
