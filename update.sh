@@ -15,3 +15,32 @@ $IPY CovidStates.py
 $IPY YorkCountyCovidMetric.py 
 $IPY AllCountyCovidMetric.py 
 
+
+$IPY <<EOT
+
+import os,glob
+import time
+from selenium import webdriver
+
+delay=5
+
+def html_to_png(fn):
+    #Save the map as an HTML file
+    #fn='docs/us_covid_states_map.html'
+    #fn.replace('html','png')
+    tmpurl='file://{path}/{mapfile}'.format(path=os.getcwd(),mapfile=fn)
+    fn_png = fn.replace('.html','.png')
+    options = webdriver.ChromeOptions()
+    options.headless = True
+    browser = webdriver.Chrome(options=options)
+    browser.get(tmpurl)
+    time.sleep(delay)
+    browser.save_screenshot(fn.replace('.html','.png'))
+    browser.quit()
+
+for fn in glob.glob('docs/*map*.html'):
+    html_to_png(fn)
+
+
+
+EOT
