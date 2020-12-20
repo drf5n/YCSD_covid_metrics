@@ -8,7 +8,7 @@ that is derived from the data behind these sources:
 * https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 
-The resultant plots are:
+The resultant plots are below. (Click on the plots to go to the live maps with annotations.)
 
 * [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html).
 * [![YCSD Case Metric Time Series](docs/us_covid_states_map.png)](https://drf5n.github.io/YCSD_covid_metrics/us_covid_states_map.html).

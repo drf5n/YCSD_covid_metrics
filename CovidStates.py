@@ -186,10 +186,13 @@ m = folium.Map(location=[37.9, -90], zoom_start=4)
 
 loc = """US States COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
       and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories</a>"""
+subt = """(Red is CDC Level 4: >100cases/28days/100k, Very High, Avoid all travel" and Black is 30x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
+             <h4 align="center" style="font-size:12px"><b>{}</b></h4>
+
              <a href="https://github.com/drf5n/YCSD_covid_metrics">(source code)</a>
-             '''.format(loc)   
+             '''.format(loc,subt)   
 
 
 display(gjson.columns)

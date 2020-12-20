@@ -30,16 +30,16 @@ def html_to_png(fn):
     #fn.replace('html','png')
     tmpurl='file://{path}/{mapfile}'.format(path=os.getcwd(),mapfile=fn)
     fn_png = fn.replace('.html','.png')
-    options = webdriver.ChromeOptions()
-    options.headless = True
-    browser = webdriver.Chrome(options=options)
     browser.get(tmpurl)
     time.sleep(delay)
     browser.save_screenshot(fn.replace('.html','.png'))
-    browser.quit()
 
+options = webdriver.ChromeOptions()
+options.headless = True
+browser = webdriver.Chrome(options=options)
 for fn in glob.glob('docs/*map*.html'):
     html_to_png(fn)
+browser.quit()
 
 
 

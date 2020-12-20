@@ -35,7 +35,7 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[36]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -46,7 +46,7 @@ if file_age(df_name) > 86400/2:
     pathlib.Path(df_name).touch()
 
 
-# In[4]:
+# In[37]:
 
 
 df=pd.read_csv(df_name)
@@ -55,7 +55,7 @@ df["date"] = pd.to_datetime(df['Report Date'])
 df.tail()
 
 
-# In[5]:
+# In[17]:
 
 
 
@@ -68,19 +68,19 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[16]:
+# In[20]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
 popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate NaNs above?
-display(popxls[popxls['Code']==810]['Population'])
-display(popxls['Locality'].str.match('York County').fillna(False))
+#display(popxls[popxls['Code']==199]['Population'])
+#display(popxls['Locality'].str.match('York County').fillna(False))
 display(popxls[popxls['Locality'].str.match('York County').fillna(False)])
 display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
-display(popxls[popxls['Locality'].str.contains('City').fillna(False)])
+#display("City:",popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[28]:
+# In[7]:
 
 
 # subset for York and normalize per capita
@@ -105,13 +105,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[29]:
+# In[8]:
 
 
 dfy.tail(30)
 
 
-# In[30]:
+# In[9]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -119,14 +119,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[31]:
+# In[10]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[34]:
+# In[11]:
 
 
 TOOLTIPS = [
@@ -175,7 +175,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[35]:
+# In[12]:
 
 
 bokeh.plotting.show(p)
