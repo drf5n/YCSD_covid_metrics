@@ -29,9 +29,9 @@ Coloring-wise it is interesting to compare the CDC's risk of foreign travel, the
 
 The CDC's risk of foreign travel and CDC risk of transmission in schools are both on a green-to-red continuum, with the foreign travel map being more strict, but the CDC domestic travel is on a light green to blue continuum, showing numbers on a scale 1/28th of the CDC's foreign travel metric.
 
-* [CDC Foreign Travel Advisories](https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html)
-* [CDC Domestic travel risk](https://covid.cdc.gov/covid-data-tracker/#cases_casesper100klast7days)
-* [CDC School risk Explanation](https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation) & as [applied to Virginia Localities](https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/)
+* [CDC Foreign Travel Advisories](https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html) -- Cases/28days/100k
+* [CDC Domestic travel risk](https://covid.cdc.gov/covid-data-tracker/#cases_casesper100klast7days) -- Cases/day/100K
+* [CDC School risk Explanation](https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation) & as [applied to Virginia Localities](https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/) -- Cases/14days/100k
 
 Side by side, these Foreign, Domestic, and School categories and thresholds maps look like this:
 
