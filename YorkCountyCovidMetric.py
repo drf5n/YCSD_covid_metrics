@@ -35,18 +35,18 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[36]:
+# In[48]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 df_name = "VA_vdh_casedata.csv"
-if file_age(df_name) > 86400/2:
+if 0 and file_age(df_name) > 86400/2:
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 
 
-# In[37]:
+# In[49]:
 
 
 df=pd.read_csv(df_name)
@@ -55,7 +55,7 @@ df["date"] = pd.to_datetime(df['Report Date'])
 df.tail()
 
 
-# In[17]:
+# In[50]:
 
 
 
@@ -68,7 +68,7 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[20]:
+# In[51]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -80,7 +80,7 @@ display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
 #display("City:",popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[7]:
+# In[52]:
 
 
 # subset for York and normalize per capita
@@ -105,13 +105,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[8]:
+# In[53]:
 
 
 dfy.tail(30)
 
 
-# In[9]:
+# In[54]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -119,14 +119,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[10]:
+# In[55]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[11]:
+# In[58]:
 
 
 TOOLTIPS = [
@@ -137,9 +137,10 @@ TOOLTIPS = [
  #   ("(x,y)", "($x, $y)"),
 ]
 
+vmax = (int(dfy['per100k_14daysum'].max() / 40 )+2)*40 # 
 
-#p=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,400),
+per100k_14daysum=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
+p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="{} Number of new cases per 100,000 persons within the last 14 days".format(loi))
 
@@ -175,7 +176,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[12]:
+# In[59]:
 
 
 bokeh.plotting.show(p)
