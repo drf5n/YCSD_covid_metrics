@@ -35,13 +35,13 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[72]:
+# In[82]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 df_name = "VA_vdh_casedata.csv"
-if 1 or  file_age(df_name) > 86400/2:
+if file_age(df_name) > 86400/2:
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 
