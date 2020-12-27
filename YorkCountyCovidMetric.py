@@ -13,11 +13,11 @@
 # -- David Forrest 2020-12-04
 # 
 
-# In[64]:
+# In[1]:
 
 
 # %matplotlib widget
-import os,sys,io, time, pathlib
+import os,sys,io, time, datetime, pathlib
 import pandas as pd
 #import numpy as np, matplotlib as mpl, matplotlib.pyplot as plt
 
@@ -28,34 +28,44 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[65]:
+# In[2]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[82]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 df_name = "VA_vdh_casedata.csv"
-if file_age(df_name) > 86400/2:
+
+df=pd.read_csv(df_name)
+#display(datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])   )
+#display(datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1) )
+
+#if 1 or file_age(df_name) > 86400/2:
+if (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 
+df=pd.read_csv(df_name)    
+if (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
+    display(f"{df_name} is still old with {df['Report Date'].iloc[-1]}")
 
-# In[73]:
+
+# In[4]:
 
 
-df=pd.read_csv(df_name)
+
 df["date"] = pd.to_datetime(df['Report Date'])
 
 df.tail()
 
 
-# In[74]:
+# In[5]:
 
 
 
@@ -68,7 +78,7 @@ df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 display(df.tail())
 
 
-# In[75]:
+# In[6]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -80,7 +90,7 @@ display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
 #display("City:",popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[76]:
+# In[7]:
 
 
 # subset for York and normalize per capita
@@ -105,13 +115,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[77]:
+# In[8]:
 
 
 dfy.tail(30)
 
 
-# In[78]:
+# In[9]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -119,14 +129,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[79]:
+# In[10]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[80]:
+# In[11]:
 
 
 TOOLTIPS = [
@@ -176,7 +186,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[81]:
+# In[12]:
 
 
 bokeh.plotting.show(p)
