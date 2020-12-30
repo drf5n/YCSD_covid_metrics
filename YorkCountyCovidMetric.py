@@ -47,7 +47,7 @@ df=pd.read_csv(df_name)
 #display(datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1) )
 
 #if 1 or file_age(df_name) > 86400/2:
-if (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
+if not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 
@@ -80,6 +80,13 @@ display(df.tail())
 
 # In[6]:
 
+
+# Read VDH population data donwloaded from https://apps.vdh.virginia.gov/HealthStats/stats.htm 
+# and https://apps.vdh.virginia.gov/HealthStats/documents/xls/2018%20Pop.xls 
+
+pop_file = '/Users/drf/Downloads/2018 Pop.xls'
+if not os.path.exists(pop_file):
+    get_ipython().system(' wget -O "$pop_name" https://apps.vdh.virginia.gov/HealthStats/documents/xls/2018%20Pop.xls')
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
 popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate NaNs above?
@@ -200,17 +207,4 @@ bokeh.plotting.save(p)
 
 # needs geckodriver  -- have it in conda env py3plot
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
-
-
-# In[14]:
-
-
-# Save notebook as a python script:
-# ! jupyter nbconvert --to script *.ipynb
-
-
-# In[ ]:
-
-
-
 

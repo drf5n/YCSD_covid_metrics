@@ -42,16 +42,24 @@ import pandas as pd
 
 
 # Downloaded state data from https://github.com/python-visualization/folium/blob/master/examples/data/us-states.json
+
 state_json=os.path.join('/Users/drf/Downloads/', 'us-states.json')
+
+if not os.path.exists(state_json):
+    get_ipython().system(' wget -O "$state_json" https://github.com/python-visualization/folium/blob/master/examples/data/us-states.json')
+
 state = geopandas.read_file(state_json)
 
 
-# In[3]:
+# In[58]:
 
 
 # #downloaded population data from Census https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/
-
+# or https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv
 census_pop_state_file=os.path.join('/Users/drf/Downloads/', 'SCPRC-EST2019-18+POP-RES.csv')
+
+if not os.path.exists(census_pop_state_file):
+    get_ipython().system(' wget -O "$census_pop_state_file" https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/SCPRC-EST2019-18+POP-RES.csv')
 
 pops = pd.read_csv(census_pop_state_file)
 #display(pops)
