@@ -51,7 +51,7 @@ if not os.path.exists(state_json):
 state = geopandas.read_file(state_json)
 
 
-# In[58]:
+# In[3]:
 
 
 # #downloaded population data from Census https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/state/detail/
@@ -146,7 +146,7 @@ gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[53]:
+# In[8]:
 
 
 #Make some colorscales
@@ -185,7 +185,7 @@ display(colorscale_28l)
 
 
 
-# In[57]:
+# In[9]:
 
 
 # Make a map out of it:
