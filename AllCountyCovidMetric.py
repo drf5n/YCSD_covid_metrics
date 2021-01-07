@@ -257,7 +257,9 @@ display(x.tail())
 
 x['foreign']= pd.cut(x['caseP28P100k'],
                        bins=[-1,5,20,100,50000],
-                       labels=['Level 1, Low:  All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.',
+                       labels=[
+                           #'Level 1, Low:  All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.',
+                           'Level 1, Low:  All travelers should wear a mask,...',
                                 'Level 2, Moderate: Travelers at increased risk for severe illness from COVID-19 should avoid all nonessential travel.',
                                 'Level 3, High: Travelers should avoid all nonessential travel',
                                 'Level 4, Very High: Travelers should avoid all travel',
@@ -441,6 +443,12 @@ popxls.tail()
 
 
 type(m.get_root().html)
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
