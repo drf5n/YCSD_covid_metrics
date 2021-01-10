@@ -208,3 +208,15 @@ bokeh.plotting.save(p)
 # needs geckodriver  -- have it in conda env py3plot
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
+
+# In[14]:
+
+
+(573.357/56.009)**(1/40)
+
+
+# In[ ]:
+
+
+
+
