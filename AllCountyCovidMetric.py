@@ -26,7 +26,7 @@
 # -- David Forrest
 # 
 
-# In[1]:
+# In[34]:
 
 
 # %matplotlib widget
@@ -44,14 +44,14 @@ bokeh.io.output_notebook()
 today_str=(datetime.datetime.now()-datetime.timedelta(hours=4)).strftime("%m/%d/%Y")
 
 
-# In[2]:
+# In[35]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[36]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -62,7 +62,7 @@ if file_age(df_name) > 86400:
     pathlib(df_name).touch()
 
 
-# In[4]:
+# In[37]:
 
 
 df=pd.read_csv(df_name)
@@ -73,11 +73,11 @@ if not df.iloc[-1]['Report Date'] == today_str:
     df.tail()
 
 
-# In[5]:
+# In[45]:
 
 
 # get the daily and 14 day sums for each locality
-df = df.sort_values(by=['Locality', 'VDH Health District', 'date'])
+df = df.sort_values(by=['Locality', 'date'])
 display(df.head())
 
 # get the 1day, 14 day, and 28day sums:
@@ -88,7 +88,7 @@ df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 display(df.tail())
 
 
-# In[6]:
+# In[46]:
 
 
 # Use population estimates from https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/ 
@@ -97,20 +97,20 @@ coest['FIPS']=coest['STATE']*1000+coest['COUNTY']
 coest['FIPSstr']=coest['FIPS'].astype(str)
 
 
-# In[7]:
+# In[47]:
 
 
 # subset for Virginia
 coestva=coest[coest['STNAME']=="Virginia"].copy()
 
 
-# In[8]:
+# In[48]:
 
 
 coestva.FIPS.iloc[0]
 
 
-# In[9]:
+# In[49]:
 
 
 pd.set_option('display.max_rows', 500)
@@ -118,7 +118,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[10]:
+# In[50]:
 
 
 # Normalize Covid cases by population
@@ -140,6 +140,12 @@ today_pop['rank']=(-today_pop['caseP14P100k']).rank()
 
 display(today_pop.tail(1))
 display(today_pop.sort_values(by=['rank']))
+
+
+# In[51]:
+
+
+dfpop[dfpop['Locality']=='Charlotte']
 
 
 # In[11]:
@@ -274,6 +280,12 @@ x['school']= pd.cut(x['caseP14P100k'],
                               ]).astype(str)
 
 x.tail()
+
+
+# In[29]:
+
+
+#x[x['Locality']=='Nelson']
 
 
 # In[17]:

@@ -67,7 +67,7 @@ df.tail()
 
 
 
-df = df.sort_values(by=['Locality', 'VDH Health District', 'date'])
+df = df.sort_values(by=['Locality', 'date'])
 display(df.head())
 
 df['TC_diff']= df.groupby('Locality')['Total Cases'].diff().fillna(0)
@@ -207,7 +207,7 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[15]:
+# In[14]:
 
 
 increase=(655.867/56.009)
