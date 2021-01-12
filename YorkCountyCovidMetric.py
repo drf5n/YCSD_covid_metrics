@@ -50,17 +50,15 @@ df=pd.read_csv(df_name)
 if not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
+df=pd.read_csv(df_name)
+df["date"] = pd.to_datetime(df['Report Date'])
 
-df=pd.read_csv(df_name)    
-if (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
+if (datetime.datetime.now() - df['date'].iloc[-1]  > datetime.timedelta(days=1)) :
     display(f"{df_name} is still old with {df['Report Date'].iloc[-1]}")
 
 
 # In[4]:
 
-
-
-df["date"] = pd.to_datetime(df['Report Date'])
 
 df.tail()
 
@@ -209,10 +207,13 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[14]:
+# In[15]:
 
 
-(573.357/56.009)**(1/40)
+increase=(655.867/56.009)
+inc_days=(30+31+13)
+
+display(increase, inc_days, increase**(1/inc_days))
 
 
 # In[ ]:
