@@ -142,13 +142,13 @@ display(today_pop.tail(1))
 display(today_pop.sort_values(by=['rank']))
 
 
-# In[51]:
+# In[52]:
 
 
-dfpop[dfpop['Locality']=='Charlotte']
+dfpop[dfpop['Locality']=='Charlottesville']
 
 
-# In[11]:
+# In[53]:
 
 
 # from http://docs.bokeh.org/en/0.11.0/docs/gallery/choropleth.html
@@ -174,7 +174,7 @@ if 0: # bokeh chorpleths are less rich than folium annoated geojsons
     colors = ["#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043"]
 
 
-# In[12]:
+# In[54]:
 
 
 if 0:
@@ -204,7 +204,7 @@ if 0:
     show(p)
 
 
-# In[13]:
+# In[55]:
 
 
 
@@ -241,13 +241,13 @@ if 0:
 #folium.LayerControl().add_to(m)
 
 
-# In[14]:
+# In[56]:
 
 
 state = geopandas.read_file(state_geo)
 
 
-# In[15]:
+# In[57]:
 
 
 today_pop
@@ -258,7 +258,7 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[16]:
+# In[58]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
@@ -282,19 +282,19 @@ x['school']= pd.cut(x['caseP14P100k'],
 x.tail()
 
 
-# In[29]:
+# In[59]:
 
 
 #x[x['Locality']=='Nelson']
 
 
-# In[17]:
+# In[60]:
 
 
 state.tail()
 
 
-# In[18]:
+# In[61]:
 
 
 import branca # for a colorscale
@@ -348,13 +348,13 @@ def style_function28(feature):
 colorscale28
 
 
-# In[19]:
+# In[62]:
 
 
 colorscale.caption
 
 
-# In[20]:
+# In[63]:
 
 
 
@@ -392,7 +392,7 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[21]:
+# In[64]:
 
 
 
@@ -431,19 +431,19 @@ m.save('docs/va_counties_map_foreign.html')
 m
 
 
-# In[22]:
+# In[65]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[23]:
+# In[66]:
 
 
 #pd.describe_option('display')
 
 
-# In[24]:
+# In[67]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -451,7 +451,7 @@ popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate N
 popxls.tail()
 
 
-# In[25]:
+# In[68]:
 
 
 type(m.get_root().html)
