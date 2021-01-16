@@ -35,7 +35,7 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[15]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -211,7 +211,7 @@ bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
 increase=(655.867/56.009)
-inc_days=(30+31+13)
+inc_days=(30+31+15)
 
 display(increase, inc_days, increase**(1/inc_days))
 
