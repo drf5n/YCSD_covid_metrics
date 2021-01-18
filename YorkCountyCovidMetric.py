@@ -207,11 +207,11 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[14]:
+# In[15]:
 
 
-increase=(655.867/56.009)
-inc_days=(30+31+15)
+increase=(698/56.009)
+inc_days=(30+31+17)
 
 display(increase, inc_days, increase**(1/inc_days))
 
