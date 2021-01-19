@@ -13,7 +13,7 @@
 # -- David Forrest 2020-12-04
 # 
 
-# In[1]:
+# In[16]:
 
 
 # %matplotlib widget
@@ -28,14 +28,14 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[2]:
+# In[17]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[20]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
