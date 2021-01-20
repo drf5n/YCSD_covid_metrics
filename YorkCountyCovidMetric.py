@@ -13,7 +13,7 @@
 # -- David Forrest 2020-12-04
 # 
 
-# In[16]:
+# In[1]:
 
 
 # %matplotlib widget
@@ -28,14 +28,14 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[17]:
+# In[2]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[20]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -207,7 +207,7 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[15]:
+# In[14]:
 
 
 increase=(698/56.009)
