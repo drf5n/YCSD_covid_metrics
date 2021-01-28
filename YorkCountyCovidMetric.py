@@ -9,6 +9,7 @@
 # * VDH represents the this number for the localities on https://www.vdh.virginia.gov/coronavirus/coronavirus/covid-19-in-virginia-locality/ and on https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/ under the localities tab
 # * VDH shares the data at https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 # * I'm sharing This notebook in Github at https://github.com/drf5n/YCSD_covid_metrics and https://github.com/drf5n/YCSD_covid_metrics/blob/master/YorkCountyCovidMetric.ipynb
+# * CDC has https://beta.healthdata.gov/Community/COVID-19-State-Profile-Report-Virginia/3ghy-svgi 
 # 
 # -- David Forrest 2020-12-04
 # 
@@ -35,7 +36,7 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[23]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -48,35 +49,32 @@ df=pd.read_csv(df_name)
 
 #if 1 or file_age(df_name) > 86400/2:
 if not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
-    get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
+    get_ipython().system("wget -qO $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 df=pd.read_csv(df_name)
 df["date"] = pd.to_datetime(df['Report Date'])
+last_date = df['date'].iloc[-1]
 
-if (datetime.datetime.now() - df['date'].iloc[-1]  > datetime.timedelta(days=1)) :
-    display(f"{df_name} is still old with {df['Report Date'].iloc[-1]}")
+if ((datetime.datetime.now() - last_date).days  >= 1) :
+    display(f"{df_name} is still old with {last_date}")
+else:
+    display(f"{df_name} is up to date at {last_date}")
 
 
 # In[4]:
 
 
-df.tail()
-
-
-# In[5]:
-
-
 
 df = df.sort_values(by=['Locality', 'date'])
-display(df.head())
 
 df['TC_diff']= df.groupby('Locality')['Total Cases'].diff().fillna(0)
 df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 
+display(df.head())
 display(df.tail())
 
 
-# In[6]:
+# In[5]:
 
 
 # Read VDH population data donwloaded from https://apps.vdh.virginia.gov/HealthStats/stats.htm 
@@ -95,7 +93,7 @@ display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
 #display("City:",popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[7]:
+# In[6]:
 
 
 # subset for York and normalize per capita
@@ -120,13 +118,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[8]:
+# In[7]:
 
 
 dfy.tail(30)
 
 
-# In[9]:
+# In[8]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -134,14 +132,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[10]:
+# In[9]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[11]:
+# In[10]:
 
 
 TOOLTIPS = [
@@ -191,13 +189,13 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[12]:
+# In[11]:
 
 
 bokeh.plotting.show(p)
 
 
-# In[13]:
+# In[12]:
 
 
 bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
@@ -210,8 +208,8 @@ bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 # In[14]:
 
 
-increase=(698/56.009)
-inc_days=(30+31+17)
+increase=(834/56.009)
+inc_days=(30+31+28)
 
 display(increase, inc_days, increase**(1/inc_days))
 
