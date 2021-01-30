@@ -205,7 +205,7 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[14]:
+# In[13]:
 
 
 increase=(834/56.009)
