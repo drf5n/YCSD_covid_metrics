@@ -49,16 +49,16 @@ df=pd.read_csv(df_name)
 
 #if 1 or file_age(df_name) > 86400/2:
 if not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
-    get_ipython().system("wget -qO $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
+    get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 df=pd.read_csv(df_name)
 df["date"] = pd.to_datetime(df['Report Date'])
 last_date = df['date'].iloc[-1]
 
 if ((datetime.datetime.now() - last_date).days  >= 1) :
-    display(f"{df_name} is still old with {last_date}")
+    display(f"{df_name} is still old with {last_date} versus {datetime.datetime.now()}")
 else:
-    display(f"{df_name} is up to date at {last_date}")
+    display(f"{df_name} is up to date at {last_date} versus {datetime.datetime.now()}")
 
 
 # In[4]:
@@ -157,6 +157,8 @@ p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
                         title="{} Number of new cases per 100,000 persons within the last 14 days".format(loi))
 
+p.add_layout(bokeh.models.Title(
+    text="https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html", text_font_style="italic"), 'above')
     
 hth = bokeh.models.HoverTool(tooltips=TOOLTIPS,
                              formatters={"$x": "datetime",
@@ -205,11 +207,11 @@ bokeh.plotting.save(p)
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[13]:
+# In[15]:
 
 
-increase=(834/56.009)
-inc_days=(30+31+28)
+increase=(748/56.009)
+inc_days=(30+31+31)
 
 display(increase, inc_days, increase**(1/inc_days))
 
