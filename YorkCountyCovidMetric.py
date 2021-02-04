@@ -158,8 +158,12 @@ p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
                         title="{} Number of new cases per 100,000 persons within the last 14 days".format(loi))
 
 p.add_layout(bokeh.models.Title(
+    text="Code: https://github.com/drf5n/YCSD_covid_metrics", text_font_style="italic"), 'above')
+
+p.add_layout(bokeh.models.Title(
     text="https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html", text_font_style="italic"), 'above')
-    
+
+
 hth = bokeh.models.HoverTool(tooltips=TOOLTIPS,
                              formatters={"$x": "datetime",
                                         "@date": "datetime"
