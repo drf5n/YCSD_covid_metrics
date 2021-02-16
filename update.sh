@@ -44,3 +44,5 @@ browser.quit()
 
 
 EOT
+
+echo "Commit & push will update https://github.com/drf5n/YCSD_covid_metrics/"

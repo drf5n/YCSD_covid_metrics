@@ -82,6 +82,7 @@ display(df.head())
 
 # get the 1day, 14 day, and 28day sums:
 df['TC_diff']= df.groupby('Locality')['Total Cases'].diff().fillna(0)
+df['TC_sum7']= df.groupby('Locality')['Total Cases'].diff(7).fillna(0)
 df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 
@@ -118,7 +119,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[28]:
+# In[34]:
 
 
 # Normalize Covid cases by population
@@ -131,6 +132,7 @@ dfpop = pd.merge(df,coestva[['FIPS','FIPSstr','CTYNAME','POPESTIMATE2019']], lef
 
 #display(dfpop)
 
+dfpop['caseP7P100k']=dfpop['TC_sum7']/dfpop['POPESTIMATE2019']*100000
 dfpop['caseP14P100k']=dfpop['TC_sum14']/dfpop['POPESTIMATE2019']*100000
 dfpop['caseP28P100k']=dfpop['TC_sum28']/dfpop['POPESTIMATE2019']*100000
 
@@ -139,13 +141,13 @@ today_pop=dfpop[dfpop['Report Date']==today_str].copy()
 today_pop['rank']=(-today_pop['caseP28P100k']).rank()
 
 display(today_pop.tail(1))
-display(today_pop.sort_values(by=['rank']))
+#display(today_pop.sort_values(by=['rank']))
 
 
-# In[11]:
+# In[33]:
 
 
-dfpop[dfpop['Locality']=='Charlottesville']
+#dfpop[dfpop['Locality']=='Charlottesville']
 
 
 # In[12]:
@@ -258,7 +260,7 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[17]:
+# In[35]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
@@ -278,23 +280,30 @@ x['school']= pd.cut(x['caseP14P100k'],
                                 'Higher risk of transmission in schools',
                                 'Highest risk of transmission in schools',
                               ]).astype(str)
+x['newschool']= pd.cut(x['caseP7P100k'],
+                       bins=[-1,10,25,100,50000],
+                       labels=['Low risk of transmission in schools',
+                                'Moderate risk of transmission in schools',
+                                'Substantial risk of transmission in schools',
+                                'High risk of transmission in schools',
+                              ]).astype(str)
 
 x.tail()
 
 
-# In[18]:
+# In[36]:
 
 
 #x[x['Locality']=='Nelson']
 
 
-# In[19]:
+# In[37]:
 
 
 state.tail()
 
 
-# In[20]:
+# In[51]:
 
 
 import branca # for a colorscale
@@ -344,17 +353,42 @@ def style_function28(feature):
         'fillColor': '#black' if y is None else colorscale28(y)
     }
 
+colorscale7 = branca.colormap.StepColormap(
+    ['blue','yellow','orange','red','red','black'], 
+    index=[0,10,25,50,125,500], caption='New Cases/7days/100k',vmin=0, vmax=500,
+).to_linear()
+colorscale7.caption='New Cases/7days/100k'  # reset caption
 
-colorscale28
+colorscale7b = branca.colormap.StepColormap(
+    ['blue','yellow','orange','red','red','black'], 
+    index=[0,10,25,50,125,500], caption='New Cases/7days/100k',vmin=0, vmax=200,
+) .to_linear()
+colorscale7b.caption='New Cases/7days/100k'  # reset caption
 
 
-# In[21]:
+
+def style_function7(feature):
+    y=feature['properties']['caseP7P100k']
+   # print(feature)
+    return {
+        'fillOpacity': 0.5,
+        'weight': 0,
+        'fillColor': '#black' if y is None else colorscale7(y)
+    }
+
+
+
+
+colorscale7b
+
+
+# In[39]:
 
 
 colorscale.caption
 
 
-# In[22]:
+# In[40]:
 
 
 
@@ -392,7 +426,45 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[23]:
+# In[45]:
+
+
+# New CDC school colors (7 day window)
+#write the combined data to a file to be read
+x.to_file("vaCovidCounties7.geojson", driver='GeoJSON')
+
+
+# Make a map out of it:
+m = folium.Map(location=[37.9, -77.9], zoom_start=7)
+
+loc = """Virginia COVID risk per new CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (school colors)"""
+subt = """(Red is CDC >100cases/7days/100k, "High Risk of Transmission in schools" and Black is 5x higher)"""
+title_html = '''
+             <h3 align="center" style="font-size:16px"><b>{}</b></h3>
+             <h4 align="center" style="font-size:12px"><b>{}</b></h4>
+             
+             <a href="https://github.com/drf5n/YCSD_covid_metrics/">(source code)</a>
+             '''.format(loc,subt)   
+
+folium.GeoJson(
+    "vaCovidCounties.geojson",
+    name='geojson',
+    style_function=style_function7,
+    highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
+    tooltip=folium.features.GeoJsonTooltip(
+        fields=['Locality','date',"VDH Health District",'caseP7P100k','newschool','caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+   #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
+   #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
+         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','School Risk (feb)','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+    ),    
+).add_to(m)
+m.add_child(colorscale7b)
+m.get_root().html.add_child(folium.Element(title_html))
+m.save('docs/va_counties_map7.html')
+m
+
+
+# In[ ]:
 
 
 
@@ -431,19 +503,19 @@ m.save('docs/va_counties_map_foreign.html')
 m
 
 
-# In[24]:
+# In[ ]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[25]:
+# In[ ]:
 
 
 #pd.describe_option('display')
 
 
-# In[26]:
+# In[ ]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -451,7 +523,7 @@ popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate N
 popxls.tail()
 
 
-# In[27]:
+# In[ ]:
 
 
 type(m.get_root().html)
