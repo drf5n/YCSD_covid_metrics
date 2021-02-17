@@ -35,6 +35,10 @@ bokeh.io.output_notebook()
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
+
+# In[3]:
+
+
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
 df_name = "VA_vdh_casedata.csv"
@@ -45,7 +49,7 @@ df=pd.read_csv(df_name)
 
 #if 1 or file_age(df_name) > 86400/2:
 if not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
-    !wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'
+    get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
     pathlib.Path(df_name).touch()
 df=pd.read_csv(df_name)
 df["date"] = pd.to_datetime(df['Report Date'])
@@ -55,6 +59,8 @@ if ((datetime.datetime.now() - last_date).days  >= 1) :
     display(f"{df_name} is still old with {last_date} versus {datetime.datetime.now()}")
 else:
     display(f"{df_name} is up to date at {last_date} versus {datetime.datetime.now()}")
+
+
 # In[4]:
 
 
