@@ -13,6 +13,7 @@ that is derived from the data behind these sources:
 The resultant plots are below. (Click on the plots to go to the live maps with annotations.)
 
 * [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html).
+* [![YCSD Case Metric Daily Time Series](docs/YorkCountyCovidMetric_per_day_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_per_day_plot.html).
 * [![YCSD Case Metric Time Series](docs/us_covid_states_map.png)](https://drf5n.github.io/YCSD_covid_metrics/us_covid_states_map.html).
 * [![YCSD Case Metric Time Series](docs/va_counties_map.png)](https://drf5n.github.io/YCSD_covid_metrics/va_counties_map.html).
 * [![YCSD Case Metric Time Series](docs/va_counties_map_foreign.png)](https://drf5n.github.io/YCSD_covid_metrics/va_counties_map_foreign.html).
