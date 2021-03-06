@@ -61,7 +61,7 @@ else:
     display(f"{df_name} is up to date at {last_date} versus {datetime.datetime.now()}")
 
 
-# In[20]:
+# In[4]:
 
 
 
@@ -70,12 +70,13 @@ df = df.sort_values(by=['Locality', 'date'])
 df['TC_diff']= df.groupby('Locality')['Total Cases'].diff().fillna(0)
 df['TC_sum14']= df.groupby('Locality')['Total Cases'].diff(14).fillna(0)
 df['TC_sum7']= df.groupby('Locality')['Total Cases'].diff(7).fillna(0)
+df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 
 display(df.head())
 display(df.tail())
 
 
-# In[21]:
+# In[5]:
 
 
 # Read VDH population data donwloaded from https://apps.vdh.virginia.gov/HealthStats/stats.htm 
@@ -94,7 +95,7 @@ display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
 #display("City:",popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[39]:
+# In[6]:
 
 
 # subset for York and normalize per capita
@@ -110,8 +111,10 @@ dfy['per100k_14daysum']=dfy['TC_sum14']*100000/VDH_pop
 dfy['per100k_7daysum']=dfy['TC_sum7']*100000/VDH_pop
 
 
+dfy['per100k_1daymean']=dfy['TC_diff']*100000/VDH_pop
 dfy['per100k_7daymean']=dfy['TC_sum7']*100000/VDH_pop/7
 dfy['per100k_14daymean']=dfy['TC_sum14']*100000/VDH_pop/14
+dfy['per100k_28daymean']=dfy['TC_sum28']*100000/VDH_pop/28
 
 
 
@@ -126,13 +129,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[23]:
+# In[7]:
 
 
 dfy.tail(30)
 
 
-# In[24]:
+# In[8]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -140,14 +143,14 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[25]:
+# In[9]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[37]:
+# In[10]:
 
 
 TOOLTIPS = [
@@ -159,6 +162,8 @@ TOOLTIPS = [
 ]
 
 vmax = (int(dfy['per100k_14daysum'].max() / 40 )+2)*40 # 
+
+#bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
 
 per100k_14daysum=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
 p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
@@ -203,23 +208,23 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[38]:
+# In[11]:
 
 
 bokeh.plotting.show(p)
 
 
-# In[28]:
+# In[12]:
 
 
-bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
-bokeh.plotting.save(p)
+
+bokeh.plotting.save(p,filename="docs/YorkCountyCovidMetric_plot.html")
 
 # needs geckodriver  -- have it in conda env py3plot
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[29]:
+# In[13]:
 
 
 increase=(748/56.009)
@@ -234,28 +239,32 @@ display(increase, inc_days, increase**(1/inc_days))
 
 
 
-# In[45]:
+# In[14]:
 
 
 TOOLTIPS = [
  #   ("index", "$index"),
  #   ("date:", "$x{%F %T}"),
     ("date:", "@date{%F}"),
-    ("cases/7d/100k:","@per100k_7daysum"),
+    ("cases/d/100k:","@per100k_1daymean"),    
+    ("cases/d/100k_7d:","@per100k_7daymean"),
+    ("cases/d/100k_14d:","@per100k_14daymean"),
+    ("cases/d/100k_28d:","@per100k_28daymean"),
  #   ("(x,y)", "($x, $y)"),
 ]
 
 vmax = (int(dfy['per100k_7daysum'].max() / 40 )+2)*40/7 # 
 
+#bokeh.plotting.output_file('docs/YorkCountyCovidMetric_per_day_plot.html', mode='inline')
 #per100k_7daysum=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
-p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
+pp=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
-                        title="{} Ave Number of new cases per 100,000 persons over the last 7 or 14 days".format(loi))
+                        title="{} Average Number of new cases per 100,000 persons over the last 7, 14 or 28 days".format(loi))
 
-p.add_layout(bokeh.models.Title(
+pp.add_layout(bokeh.models.Title(
     text="Code: https://github.com/drf5n/YCSD_covid_metrics", text_font_style="italic"), 'above')
 
-p.add_layout(bokeh.models.Title(
+pp.add_layout(bokeh.models.Title(
     text="https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html", text_font_style="italic"), 'above')
 
 
@@ -268,27 +277,45 @@ hth = bokeh.models.HoverTool(tooltips=TOOLTIPS,
 
 print(hth)
 print(hth.formatters)
-p.add_tools(hth)
+pp.add_tools(hth)
 #hover = p.select(dict(type=bokeh.models.HoverTool))
 
 
 #hover(tooltips=TOOLTIPS,
 #)
 
-p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=10/7, fill_alpha=0.4, fill_color='blue'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=10/7,top=49/7, fill_alpha=0.4, fill_color='yellow'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=50/7,top=100/7, fill_alpha=0.4, fill_color='orange'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=100/7, fill_alpha=0.4, fill_color='red'))
+pp.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=10/7, fill_alpha=0.4, fill_color='blue'))
+pp.add_layout(bokeh.models.BoxAnnotation(bottom=10/7,top=49/7, fill_alpha=0.4, fill_color='yellow'))
+pp.add_layout(bokeh.models.BoxAnnotation(bottom=50/7,top=100/7, fill_alpha=0.4, fill_color='orange'))
+pp.add_layout(bokeh.models.BoxAnnotation(bottom=100/7, fill_alpha=0.4, fill_color='red'))
 
-p.line(x='date', y='per100k_14daymean',source=dfy)
-p.line(x='date', y='per100k_7daymean',source=dfy,color='blue')
+pp.circle(x='date', y='per100k_1daymean',source=dfy,color='black',legend_label="Daily")
+pp.line(x='date', y='per100k_14daymean',source=dfy,legend_label="/7d")
+pp.line(x='date', y='per100k_7daymean',source=dfy,color='blue',legend_label="/14d")
+pp.line(x='date', y='per100k_28daymean',source=dfy,color='green',legend_label="/28d")
 
 
 #p.title()
 
-bokeh.plotting.show(p)
+bokeh.plotting.show(pp)
 
 #?p.line
+
+
+# In[15]:
+
+
+
+print(bokeh.plotting.save(pp,filename="docs/YorkCountyCovidMetric_per_day_plot.html"))
+
+# needs geckodriver  -- have it in conda env py3plot
+bokeh.io.export_png(pp, filename="docs/YorkCountyCovidMetric_per_day_plot.png")
+
+
+# In[16]:
+
+
+get_ipython().run_line_magic('pinfo', 'bokeh.plotting.save')
 
 
 # In[ ]:
