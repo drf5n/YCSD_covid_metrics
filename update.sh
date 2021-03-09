@@ -36,7 +36,7 @@ def html_to_png(fn):
 
 options = webdriver.ChromeOptions()
 options.headless = True
-browser = webdriver.Chrome(options=options)
+browser = webdriver.Chrome('/usr/local/bin/chromedriver',options=options)
 for fn in glob.glob('docs/*map*.html'):
     html_to_png(fn)
 browser.quit()

@@ -75,41 +75,81 @@ pop_augment = pops.set_index('STATE').join(statemaster.set_index('state')['state
 display(pop_augment)
 
 
-# In[5]:
+# In[26]:
 
 
-# Download the state-level covid case histories from...  
+# Download the state-level covid case histories from... and try to make a dfy from the last data 
 
-covids = pd.read_json('https://api.covidtracking.com/v1/states/daily.json')
 
-#covids["date"] = pd.to_datetime(covids['date'])
-display(covids)
+state_source = "CDC"
+
+
+if state_source == "CovidTracking":
+    covids = pd.read_json('https://api.covidtracking.com/v1/states/daily.json')
+# Breaks after march 7 per
+# https://covidtracking.com/about-data/faq#what-will-happen-to-your-apidata-after-march-7 
+# CovidTracking suggests https://healthdata.gov/dataset/covid-19-diagnostic-laboratory-testing-pcr-testing-time-series
+# which in turn suggests: https://beta.healthdata.gov/dataset/COVID-19-Diagnostic-Laboratory-Testing-PCR-Testing/j8mb-icvb
+# This new schema is a bit different
+
+    #covids["date"] = pd.to_datetime(covids['date'])
+    display(covids)
+    df = covids.sort_values(by=['state', 'date'])
+    display(df)
+    
+    lastdate = int(covids.tail(1).date) # last day in file
+    #doi = lastdate # (bad as updates happen)
+    doi = int((datetime.datetime.now()-datetime.timedelta(days = 1)
+         ).strftime("%Y%m%d"))  # yesterday morning as an int
+    display(doi)
+
+    df['TC_diff']= df.groupby('state')['positive'].diff().fillna(0) 
+    df['TC_sum14']= df.groupby('state')['positive'].diff(14).fillna(0)
+    df['TC_sum28']= df.groupby('state')['positive'].diff(28).fillna(0)
+    dfy = df[df['date']==doi].copy()
+
+elif  state_source == "CDC":
+    # 4 day lag seems to work
+    url = 'https://beta.healthdata.gov/api/views/j8mb-icvb/rows.csv?accessType=DOWNLOAD&api_foundry=true'
+    print(f"State COVID Data from {state_source}: {url}")
+    #covids = pd.read_json('https://beta.healthdata.gov/resource/j8mb-icvb.json')
+    covids = pd.read_csv(url)
+    covids["date"] = pd.to_datetime(covids['date'])
+    lastdate = covids.tail(1).date # last day in file
+    df = covids[covids["overall_outcome"]=="Positive"].sort_values(by=['state', 'date'])
+    doi = (datetime.datetime.now()-datetime.timedelta(days = 4)
+         ).strftime("%Y%m%d")  # yesterday morning as an int
+    display(doi, lastdate)
+    df['TC_diff']= df.groupby('state')['total_results_reported'].diff().fillna(0) 
+    df['TC_sum14']= df.groupby('state')['total_results_reported'].diff(14).fillna(0)
+    df['TC_sum28']= df.groupby('state')['total_results_reported'].diff(28).fillna(0)
+    dfy = df[df['date']==doi].copy()
+
+    
+    display(dfy)
+else:
+    print(f"No state daily data for {state_source}")
+
+
+
+
+
+# In[ ]:
+
+
 
 
 
 # In[6]:
 
 
-lastdate = int(covids.tail(1).date) # last day in file
-#doi = lastdate # (bad as updates happen)
-doi = int((datetime.datetime.now()-datetime.timedelta(days = 1)
-         ).strftime("%Y%m%d"))  # yesterday morning as an int
-display(doi)
 
 
-# In[7]:
+
+# In[30]:
 
 
-df = covids.sort_values(by=['state', 'date'])
-display(df)
 
-df['TC_diff']= df.groupby('state')['positive'].diff().fillna(0)
-df['TC_sum14']= df.groupby('state')['positive'].diff(14).fillna(0)
-df['TC_sum28']= df.groupby('state')['positive'].diff(28).fillna(0)
-
-display(df)
-
-dfy = df[df['date']==doi].copy()
 display("DFY:",dfy)
 
 dfya = dfy.set_index('state').join(pop_augment.set_index('state_abbr'),lsuffix='lj').reset_index()
@@ -141,12 +181,12 @@ dfya['school']= pd.cut(dfya['per100k_14daysum'],
 display(dfya.head())
 
 file_state_covid='USCovidStates.geojson'
-gjson = state.set_index('id').join(dfya[['state','date','positive','POPESTIMATE2019','per100k_1daysum','per100k_14daysum', 'per100k_28daysum','foreign','school']].set_index('state'))
+gjson = state.set_index('id').join(dfya[['state','date','new_results_reported','POPESTIMATE2019','per100k_1daysum','per100k_14daysum', 'per100k_28daysum','foreign','school']].set_index('state'))
 gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[8]:
+# In[31]:
 
 
 #Make some colorscales
@@ -185,14 +225,14 @@ display(colorscale_28l)
 
 
 
-# In[9]:
+# In[33]:
 
 
 # Make a map out of it:
 m = folium.Map(location=[37.9, -90], zoom_start=4)
 
 
-loc = """US States COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
+loc = f"""{doi} US States COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
       and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories</a>"""
 subt = """(Red is CDC Level 4: >100cases/28days/100k, Very High, Avoid all travel" and Black is 30x higher)"""
 title_html = '''
@@ -229,6 +269,12 @@ m.get_root().html.add_child(folium.Element(title_html))
 
 m.save('docs/us_covid_states_map.html')
 m
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:

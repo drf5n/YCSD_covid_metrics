@@ -26,7 +26,7 @@
 # -- David Forrest
 # 
 
-# In[1]:
+# In[33]:
 
 
 # %matplotlib widget
@@ -41,17 +41,17 @@ import bokeh.io
 import bokeh.models
 from bokeh.io import output_notebook
 bokeh.io.output_notebook()
-today_str=(datetime.datetime.now()-datetime.timedelta(hours=4)).strftime("%m/%d/%Y")
+today_str=(datetime.datetime.now()-datetime.timedelta(hours=28)).strftime("%m/%d/%Y")
 
 
-# In[2]:
+# In[34]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[35]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -62,7 +62,7 @@ if file_age(df_name) > 86400:
     pathlib(df_name).touch()
 
 
-# In[4]:
+# In[36]:
 
 
 df=pd.read_csv(df_name)
@@ -73,7 +73,7 @@ if not df.iloc[-1]['Report Date'] == today_str:
     df.tail()
 
 
-# In[5]:
+# In[37]:
 
 
 # get the daily and 14 day sums for each locality
@@ -89,7 +89,7 @@ df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 display(df.tail())
 
 
-# In[6]:
+# In[38]:
 
 
 # Use population estimates from https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/ 
@@ -98,20 +98,20 @@ coest['FIPS']=coest['STATE']*1000+coest['COUNTY']
 coest['FIPSstr']=coest['FIPS'].astype(str)
 
 
-# In[7]:
+# In[39]:
 
 
 # subset for Virginia
 coestva=coest[coest['STNAME']=="Virginia"].copy()
 
 
-# In[8]:
+# In[40]:
 
 
 coestva.FIPS.iloc[0]
 
 
-# In[9]:
+# In[41]:
 
 
 pd.set_option('display.max_rows', 500)
@@ -119,7 +119,7 @@ pd.set_option('display.max_rows', 500)
 display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[34]:
+# In[42]:
 
 
 # Normalize Covid cases by population
@@ -144,7 +144,7 @@ display(today_pop.tail(1))
 #display(today_pop.sort_values(by=['rank']))
 
 
-# In[33]:
+# In[11]:
 
 
 #dfpop[dfpop['Locality']=='Charlottesville']
@@ -260,7 +260,7 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[35]:
+# In[17]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
@@ -291,19 +291,19 @@ x['newschool']= pd.cut(x['caseP7P100k'],
 x.tail()
 
 
-# In[36]:
+# In[18]:
 
 
 #x[x['Locality']=='Nelson']
 
 
-# In[37]:
+# In[19]:
 
 
 state.tail()
 
 
-# In[51]:
+# In[20]:
 
 
 import branca # for a colorscale
@@ -382,13 +382,13 @@ def style_function7(feature):
 colorscale7b
 
 
-# In[39]:
+# In[21]:
 
 
 colorscale.caption
 
 
-# In[40]:
+# In[22]:
 
 
 
@@ -426,7 +426,7 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[45]:
+# In[23]:
 
 
 # New CDC school colors (7 day window)
@@ -464,7 +464,7 @@ m.save('docs/va_counties_map7.html')
 m
 
 
-# In[ ]:
+# In[24]:
 
 
 
@@ -503,19 +503,19 @@ m.save('docs/va_counties_map_foreign.html')
 m
 
 
-# In[ ]:
+# In[25]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[ ]:
+# In[26]:
 
 
 #pd.describe_option('display')
 
 
-# In[ ]:
+# In[27]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
@@ -523,7 +523,7 @@ popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate N
 popxls.tail()
 
 
-# In[ ]:
+# In[28]:
 
 
 type(m.get_root().html)

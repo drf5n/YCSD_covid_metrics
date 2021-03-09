@@ -302,7 +302,7 @@ bokeh.plotting.show(pp)
 #?p.line
 
 
-# In[15]:
+# In[17]:
 
 
 
@@ -315,7 +315,7 @@ bokeh.io.export_png(pp, filename="docs/YorkCountyCovidMetric_per_day_plot.png")
 # In[16]:
 
 
-get_ipython().run_line_magic('pinfo', 'bokeh.plotting.save')
+#?bokeh.plotting.save
 
 
 # In[ ]:
