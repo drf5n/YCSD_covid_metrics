@@ -75,7 +75,7 @@ pop_augment = pops.set_index('STATE').join(statemaster.set_index('state')['state
 display(pop_augment)
 
 
-# In[26]:
+# In[5]:
 
 
 # Download the state-level covid case histories from... and try to make a dfy from the last data 
@@ -117,7 +117,7 @@ elif  state_source == "CDC":
     covids["date"] = pd.to_datetime(covids['date'])
     lastdate = covids.tail(1).date # last day in file
     df = covids[covids["overall_outcome"]=="Positive"].sort_values(by=['state', 'date'])
-    doi = (datetime.datetime.now()-datetime.timedelta(days = 4)
+    doi = (datetime.datetime.now()-datetime.timedelta(days = 5)
          ).strftime("%Y%m%d")  # yesterday morning as an int
     display(doi, lastdate)
     df['TC_diff']= df.groupby('state')['total_results_reported'].diff().fillna(0) 
@@ -132,21 +132,17 @@ else:
 
 
 
-
-
-# In[ ]:
-
-
-
+print(dfy.shape)
 
 
 # In[6]:
 
 
+# How fast does the data come in?
+df.groupby(['date'])['state'].count()
 
 
-
-# In[30]:
+# In[7]:
 
 
 
@@ -186,7 +182,7 @@ gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[31]:
+# In[8]:
 
 
 #Make some colorscales
@@ -225,7 +221,7 @@ display(colorscale_28l)
 
 
 
-# In[33]:
+# In[9]:
 
 
 # Make a map out of it:

@@ -144,13 +144,13 @@ display(today_pop.tail(1))
 #display(today_pop.sort_values(by=['rank']))
 
 
-# In[11]:
+# In[43]:
 
 
 #dfpop[dfpop['Locality']=='Charlottesville']
 
 
-# In[12]:
+# In[44]:
 
 
 # from http://docs.bokeh.org/en/0.11.0/docs/gallery/choropleth.html
@@ -176,7 +176,7 @@ if 0: # bokeh chorpleths are less rich than folium annoated geojsons
     colors = ["#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043"]
 
 
-# In[13]:
+# In[45]:
 
 
 if 0:
@@ -206,7 +206,7 @@ if 0:
     show(p)
 
 
-# In[14]:
+# In[46]:
 
 
 
@@ -243,13 +243,13 @@ if 0:
 #folium.LayerControl().add_to(m)
 
 
-# In[15]:
+# In[47]:
 
 
 state = geopandas.read_file(state_geo)
 
 
-# In[16]:
+# In[48]:
 
 
 today_pop
@@ -260,7 +260,7 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[17]:
+# In[49]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
@@ -291,19 +291,19 @@ x['newschool']= pd.cut(x['caseP7P100k'],
 x.tail()
 
 
-# In[18]:
+# In[50]:
 
 
 #x[x['Locality']=='Nelson']
 
 
-# In[19]:
+# In[51]:
 
 
 state.tail()
 
 
-# In[20]:
+# In[52]:
 
 
 import branca # for a colorscale
@@ -382,13 +382,13 @@ def style_function7(feature):
 colorscale7b
 
 
-# In[21]:
+# In[53]:
 
 
 colorscale.caption
 
 
-# In[22]:
+# In[62]:
 
 
 
@@ -414,10 +414,10 @@ folium.GeoJson(
     style_function=style_function14,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['Locality','date',"VDH Health District",'caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+        fields=['Locality','date',"VDH Health District",'caseP7P100k','caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
    #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
    #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
-         aliases=['Locality','Date','VDH District','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
     ),    
 ).add_to(m)
 m.add_child(colorscale14)
@@ -426,7 +426,7 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[23]:
+# In[56]:
 
 
 # New CDC school colors (7 day window)
@@ -464,7 +464,7 @@ m.save('docs/va_counties_map7.html')
 m
 
 
-# In[24]:
+# In[61]:
 
 
 
@@ -491,10 +491,10 @@ folium.GeoJson(
     style_function=style_function28,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['Locality','date',"VDH Health District",'caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+        fields=['Locality','date',"VDH Health District",'caseP7P100k','caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
    #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
    #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
-         aliases=['Locality','Date','VDH District','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
     ),    
 ).add_to(m)
 m.add_child(colorscale28)
@@ -503,19 +503,19 @@ m.save('docs/va_counties_map_foreign.html')
 m
 
 
-# In[25]:
+# In[58]:
 
 
 x.loc['51775']['caseP14P100k']
 
 
-# In[26]:
+# In[59]:
 
 
 #pd.describe_option('display')
 
 
-# In[27]:
+# In[60]:
 
 
 popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
