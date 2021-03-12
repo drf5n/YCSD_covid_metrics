@@ -290,8 +290,8 @@ pp.add_layout(bokeh.models.BoxAnnotation(bottom=50/7,top=100/7, fill_alpha=0.4, 
 pp.add_layout(bokeh.models.BoxAnnotation(bottom=100/7, fill_alpha=0.4, fill_color='red'))
 
 pp.circle(x='date', y='per100k_1daymean',source=dfy,color='black',legend_label="Daily")
-pp.line(x='date', y='per100k_14daymean',source=dfy,color="black",legend_label="/7d")
-pp.line(x='date', y='per100k_7daymean',source=dfy,color='blue',legend_label="/14d")
+pp.line(x='date', y='per100k_7daymean',source=dfy,color="black",legend_label="/7d")
+pp.line(x='date', y='per100k_14daymean',source=dfy,color='blue',legend_label="/14d")
 pp.line(x='date', y='per100k_28daymean',source=dfy,color='red',legend_label="/28d")
 
 

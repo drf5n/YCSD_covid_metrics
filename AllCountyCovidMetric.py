@@ -160,51 +160,6 @@ from bokeh.sampledata.us_counties import data as counties
 from bokeh.sampledata.us_states import data as states
 from bokeh.sampledata.unemployment import data as unemployment
 
-if 0: # bokeh chorpleths are less rich than folium annoated geojsons
-
-    INC_STATES = ('VA')
-
-    EXCLUDED = ("ak", "hi", "pr", "gu", "vi", "mp", "as")
-    INCLUDED = ('va')
-
-    state_xs = [states[code]["lons"] for code in states if code in INC_STATES]
-    state_ys = [states[code]["lats"] for code in states if code in INC_STATES]
-
-    county_xs=[counties[code]["lons"] for code in counties if counties[code]["state"]  in INCLUDED]
-    county_ys=[counties[code]["lats"] for code in counties if counties[code]["state"]  in INCLUDED]
-
-    colors = ["#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043"]
-
-
-# In[13]:
-
-
-if 0:
-    county_colors = []
-    for county_id in counties:
-        if counties[county_id]["state"] not in INCLUDED:
-            continue
-        try:
-            rate = unemployment[county_id]
-            idx = int(rate/6)
-            county_colors.append(colors[idx])
-        except KeyError:
-            county_colors.append("black")
-
-    p = figure(title="US Unemployment 2009", toolbar_location="left",
-               plot_width=1100, plot_height=700)
-
-    p.patches(county_xs, county_ys,
-              fill_color=county_colors, fill_alpha=0.7,
-              line_color="white", line_width=0.5)
-
-    p.patches(state_xs, state_ys, fill_alpha=0.0,
-              line_color="#884444", line_width=2, line_alpha=0.3)
-
-    output_file("choropleth.html", title="choropleth.py example")
-
-    show(p)
-
 
 # In[14]:
 
@@ -214,33 +169,6 @@ if 0:
 # Find the original file here: https://github.com/python-visualization/folium/tree/master/examples/data
 # You have to download this file and set the directory where you saved it
 state_geo = os.path.join('/Users/drf/Downloads/', 'counties.geojson')
-
-# Load the unemployment value of each state
-# Find the original file here: https://github.com/python-visualization/folium/tree/master/examples/data
-#state_unemployment = os.path.join('/Users/y.holtz/Desktop/', 'US_Unemployment_Oct2012.csv')
-#state_data = pd.read_csv(state_unemployment)
-
-# Initialize the map:
-
-# folium choropleths are less rich than annotated geojsons
-# Add the color for the chloropleth:
-if 0:
-   m = folium.Map(location=[37.9, -77.9], zoom_start=7)
-   m.choropleth(
-    geo_data=state_geo,
-    name='CovidCasesperfortnight100k',
-    data=today_pop,
-    columns=['FIPSstr', 'caseP14P100k'],
-   # columns=['FIPS', 'POPESTIMATE2019'],
-    key_on='feature.properties.GEOID',
-    fill_color='YlOrRd',
-    fill_opacity=0.7,
-    line_opacity=0.2,
-    legend_name='New Cases/14day/100k',
-    bins=[5,20,50, 200,1700]
-
-   )
-#folium.LayerControl().add_to(m)
 
 
 # In[15]:
@@ -257,6 +185,7 @@ today_pop.set_index("FIPS").join(state.set_index('GEOID'))
 
 x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 
+#display(x.tail())
 display(x.tail())
 
 
