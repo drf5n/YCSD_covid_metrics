@@ -111,12 +111,12 @@ coestva=coest[coest['STNAME']=="Virginia"].copy()
 coestva.FIPS.iloc[0]
 
 
-# In[9]:
+# In[31]:
 
 
 pd.set_option('display.max_rows', 500)
 
-display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
+#display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
 # In[10]:
@@ -303,7 +303,7 @@ x.tail()
 state.tail()
 
 
-# In[20]:
+# In[32]:
 
 
 import branca # for a colorscale
@@ -379,7 +379,7 @@ def style_function7(feature):
 
 
 
-colorscale7b
+#colorscale7b
 
 
 # In[21]:
@@ -503,10 +503,11 @@ m.save('docs/va_counties_map_foreign.html')
 m
 
 
-# In[25]:
+# In[48]:
 
 
-x.loc['51775']['caseP14P100k']
+#x.iloc['11775']
+x.loc['51199'][['Locality','caseP7P100k','caseP14P100k','caseP28P100k']]
 
 
 # In[26]:
@@ -515,18 +516,18 @@ x.loc['51775']['caseP14P100k']
 #pd.describe_option('display')
 
 
-# In[27]:
+# In[30]:
 
 
-popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
-popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate NaNs above?
-popxls.tail()
+#popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])
+#popxls['FIPS']=51000+(popxls.loc[:,'Code'].fillna(0)).astype(int)  # eliminate NaNs above?
+#popxls.tail()
 
 
-# In[28]:
+# In[29]:
 
 
-type(m.get_root().html)
+#type(m.get_root().html)
 
 
 # In[ ]:
