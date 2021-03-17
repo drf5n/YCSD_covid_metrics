@@ -14,7 +14,7 @@
 # -- David Forrest 2020-12-04
 # 
 
-# In[1]:
+# In[14]:
 
 
 # %matplotlib widget
@@ -29,14 +29,14 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[2]:
+# In[15]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[16]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -95,7 +95,7 @@ display(popxls[popxls['Locality'].str.contains('Virginia Beach').fillna(False)])
 #display("City:",popxls[popxls['Locality'].str.contains('City').fillna(False)])
 
 
-# In[6]:
+# In[7]:
 
 
 # subset for York and normalize per capita
@@ -129,13 +129,13 @@ if 0:
     dfy['per100k_14daysum']=dfy['TC_sum14']*100000/450189  
 
 
-# In[7]:
+# In[8]:
 
 
 dfy.tail(30)
 
 
-# In[8]:
+# In[9]:
 
 
 ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
@@ -143,20 +143,21 @@ ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cas
 ph
 
 
-# In[9]:
+# In[10]:
 
 
 ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
 ph
 
 
-# In[10]:
+# In[13]:
 
 
 TOOLTIPS = [
  #   ("index", "$index"),
  #   ("date:", "$x{%F %T}"),
     ("date:", "@date{%F}"),
+    ("cases/7d/100k:","@per100k_7daysum"),
     ("cases/14d/100k:","@per100k_14daysum"),
  #   ("(x,y)", "($x, $y)"),
 ]
@@ -193,11 +194,21 @@ p.add_tools(hth)
 #hover(tooltips=TOOLTIPS,
 #)
 
-p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=5, fill_alpha=0.4, fill_color='teal'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=5,top=20, fill_alpha=0.4, fill_color='lightgreen'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=20,top=50, fill_alpha=0.4, fill_color='yellow'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=50,top=200, fill_alpha=0.4, fill_color='orange'))
-p.add_layout(bokeh.models.BoxAnnotation(bottom=200, fill_alpha=0.4, fill_color='red'))
+metric_span = 7
+
+if metric_span == 14: 
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=5, fill_alpha=0.4, fill_color='teal'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=5,top=20, fill_alpha=0.4, fill_color='lightgreen'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=20,top=50, fill_alpha=0.4, fill_color='yellow'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=50,top=200, fill_alpha=0.4, fill_color='orange'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=200, fill_alpha=0.4, fill_color='red'))
+
+if metric_span == 7: 
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=5, fill_alpha=0.4, fill_color='teal'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=5,top=20, fill_alpha=0.4, fill_color='lightgreen'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=20,top=50, fill_alpha=0.4, fill_color='yellow'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=50,top=200, fill_alpha=0.4, fill_color='orange'))
+    p.add_layout(bokeh.models.BoxAnnotation(bottom=200, fill_alpha=0.4, fill_color='red'))
 
 
 
@@ -208,7 +219,7 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 #?p.line
 
 
-# In[11]:
+# In[12]:
 
 
 bokeh.plotting.show(p)
