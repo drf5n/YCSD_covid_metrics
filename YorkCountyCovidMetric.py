@@ -14,7 +14,7 @@
 # -- David Forrest 2020-12-04
 # 
 
-# In[14]:
+# In[1]:
 
 
 # %matplotlib widget
@@ -29,14 +29,21 @@ from bokeh.io import output_notebook
 bokeh.io.output_notebook()
 
 
-# In[15]:
+# In[2]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[16]:
+# In[12]:
+
+
+os.getcwd()
+get_ipython().system(' pwd ; ls')
+
+
+# In[11]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -48,8 +55,9 @@ df=pd.read_csv(df_name)
 #display(datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1) )
 
 #if 1 or file_age(df_name) > 86400/2:
-if not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
+if 1 or not os.path.exists(df_name) or (datetime.datetime.now() - pd.to_datetime(df['Report Date'].iloc[-1])  > datetime.timedelta(days=1)) :
     get_ipython().system("wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'")
+    get_ipython().system(' pwd ; ls')
     pathlib.Path(df_name).touch()
 df=pd.read_csv(df_name)
 df["date"] = pd.to_datetime(df['Report Date'])
