@@ -36,14 +36,15 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[12]:
+# In[13]:
 
 
-os.getcwd()
-get_ipython().system(' pwd ; ls')
+#os.getcwd()
+#!wget -O $df_name 'https://data.virginia.gov/api/views/bre9-aqqr/rows.csv?accessType=DOWNLOAD'
+#! pwd ; ls
 
 
-# In[11]:
+# In[14]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
