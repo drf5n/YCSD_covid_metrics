@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# try this if webdriver errors:
+# webdrivermanager chrome 
+# or maybe 
+
 IPY=/Users/drf/anaconda3/envs/py3plot/bin/ipython
 
 for file in *.ipynb; do 
