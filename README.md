@@ -7,8 +7,8 @@ that is derived from the data behind these sources:
 * https://www.vdh.virginia.gov/coronavirus/coronavirus/covid-19-in-virginia-locality/
 * https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
 
-
-
+YCSD stopped tracking local community spread and the https://ycsd.yorkcountyschools.org/domain/1313 link is now empty. YCSD tracks only school cases and
+cases and quarantine status at https://yorkcountyschools.org/parents/studentInfo/backtoSchool/Covid19Dashboard.html
 
 The resultant plots are below. (Click on the plots to go to the live maps with annotations.)
 
@@ -37,7 +37,6 @@ The CDC's risk of foreign travel and CDC risk of transmission in schools are bot
 Side by side, these Foreign, Domestic, and School categories and thresholds maps look like this:
 
 ![CDC Scale Colors](CDCmaps_foreign_domestic_school.png)
-
 
 
 -- Dave Forrest 2020-12-21
