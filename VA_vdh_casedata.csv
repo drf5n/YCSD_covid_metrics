@@ -75676,3 +75676,136 @@ Report Date,FIPS,Locality,VDH Health District,Total Cases,Hospitalizations,Death
 10/06/2021,51820,Waynesboro,Central Shenandoah,3318,91,42
 10/06/2021,51830,Williamsburg,Peninsula,1097,44,14
 10/06/2021,51840,Winchester,Lord Fairfax,3603,143,51
+10/07/2021,51001,Accomack,Eastern Shore,3878,296,73
+10/07/2021,51003,Albemarle,Blue Ridge,7697,314,96
+10/07/2021,51005,Alleghany,Alleghany,1998,80,61
+10/07/2021,51007,Amelia,Piedmont,1327,60,39
+10/07/2021,51009,Amherst,Central Virginia,4168,206,53
+10/07/2021,51011,Appomattox,Central Virginia,2297,105,34
+10/07/2021,51013,Arlington,Arlington,18004,910,266
+10/07/2021,51015,Augusta,Central Shenandoah,9802,277,112
+10/07/2021,51017,Bath,Central Shenandoah,428,17,14
+10/07/2021,51019,Bedford,Central Virginia,9432,363,132
+10/07/2021,51021,Bland,Mount Rogers,1036,41,14
+10/07/2021,51023,Botetourt,Alleghany,3568,89,40
+10/07/2021,51025,Brunswick,Southside,1739,61,31
+10/07/2021,51027,Buchanan,Cumberland Plateau,2218,136,54
+10/07/2021,51029,Buckingham,Piedmont,2573,76,36
+10/07/2021,51031,Campbell,Central Virginia,6832,309,129
+10/07/2021,51033,Caroline,Rappahannock,3679,84,48
+10/07/2021,51035,Carroll,Mount Rogers,3658,259,85
+10/07/2021,51036,Charles City,Chickahominy,653,43,19
+10/07/2021,51037,Charlotte,Piedmont,1202,76,24
+10/07/2021,51041,Chesterfield,Chesterfield,37937,1132,511
+10/07/2021,51043,Clarke,Lord Fairfax,1291,57,22
+10/07/2021,51045,Craig,Alleghany,495,19,6
+10/07/2021,51047,Culpeper,Rappahannock Rapidan,6150,205,78
+10/07/2021,51049,Cumberland,Piedmont,690,35,13
+10/07/2021,51051,Dickenson,Cumberland Plateau,1507,54,24
+10/07/2021,51053,Dinwiddie,Crater,2976,115,50
+10/07/2021,51057,Essex,Three Rivers,1167,55,15
+10/07/2021,51059,Fairfax,Fairfax,89287,4248,1158
+10/07/2021,51061,Fauquier,Rappahannock Rapidan,6604,269,81
+10/07/2021,51063,Floyd,New River,1333,44,25
+10/07/2021,51065,Fluvanna,Blue Ridge,2495,110,22
+10/07/2021,51067,Franklin County,West Piedmont,5706,238,96
+10/07/2021,51069,Frederick,Lord Fairfax,10987,322,131
+10/07/2021,51071,Giles,New River,2119,79,28
+10/07/2021,51073,Gloucester,Three Rivers,3712,87,64
+10/07/2021,51075,Goochland,Chickahominy,1901,65,28
+10/07/2021,51077,Grayson,Mount Rogers,1959,121,45
+10/07/2021,51079,Greene,Blue Ridge,2080,122,28
+10/07/2021,51081,Greensville,Crater,1833,59,25
+10/07/2021,51083,Halifax,Southside,3660,147,99
+10/07/2021,51085,Hanover,Chickahominy,11218,360,188
+10/07/2021,51087,Henrico,Henrico,33127,1231,698
+10/07/2021,51089,Henry,West Piedmont,6102,423,143
+10/07/2021,51091,Highland,Central Shenandoah,165,2,2
+10/07/2021,51093,Isle of Wight,Western Tidewater,4243,212,82
+10/07/2021,51095,James City,Peninsula,6684,237,89
+10/07/2021,51097,King and Queen,Three Rivers,592,39,8
+10/07/2021,51099,King George,Rappahannock,2464,69,22
+10/07/2021,51101,King William,Three Rivers,1808,68,22
+10/07/2021,51103,Lancaster,Three Rivers,1037,32,21
+10/07/2021,51105,Lee,Lenowisco,3525,136,56
+10/07/2021,51107,Loudoun,Loudoun,33122,1178,292
+10/07/2021,51109,Louisa,Blue Ridge,2999,140,42
+10/07/2021,51111,Lunenburg,Piedmont,1022,34,19
+10/07/2021,51113,Madison,Rappahannock Rapidan,938,37,20
+10/07/2021,51115,Mathews,Three Rivers,863,29,19
+10/07/2021,51117,Mecklenburg,Southside,3241,119,78
+10/07/2021,51119,Middlesex,Three Rivers,909,32,27
+10/07/2021,51121,Montgomery,New River,11432,247,96
+10/07/2021,51125,Nelson,Blue Ridge,1271,53,16
+10/07/2021,51127,New Kent,Chickahominy,2200,58,21
+10/07/2021,51131,Northampton,Eastern Shore,1108,99,40
+10/07/2021,51133,Northumberland,Three Rivers,1147,38,26
+10/07/2021,51135,Nottoway,Piedmont,2502,122,61
+10/07/2021,51137,Orange,Rappahannock Rapidan,3463,127,50
+10/07/2021,51139,Page,Lord Fairfax,3173,159,67
+10/07/2021,51141,Patrick,West Piedmont,1932,131,53
+10/07/2021,51143,Pittsylvania,Pittsylvania-Danville,7646,333,101
+10/07/2021,51145,Powhatan,Chesterfield,2672,67,27
+10/07/2021,51147,Prince Edward,Piedmont,2822,125,47
+10/07/2021,51149,Prince George,Crater,4773,78,37
+10/07/2021,51153,Prince William,Prince William,53250,1939,544
+10/07/2021,51155,Pulaski,New River,3844,182,77
+10/07/2021,51157,Rappahannock,Rappahannock Rapidan,535,23,4
+10/07/2021,51159,Richmond County,Three Rivers,1672,47,13
+10/07/2021,51161,Roanoke County,Alleghany,11216,240,157
+10/07/2021,51163,Rockbridge,Central Shenandoah,2001,70,54
+10/07/2021,51165,Rockingham,Central Shenandoah,8904,550,138
+10/07/2021,51167,Russell,Cumberland Plateau,3540,148,53
+10/07/2021,51169,Scott,Lenowisco,2863,158,72
+10/07/2021,51171,Shenandoah,Lord Fairfax,5962,274,150
+10/07/2021,51173,Smyth,Mount Rogers,4466,265,107
+10/07/2021,51175,Southampton,Western Tidewater,2316,81,61
+10/07/2021,51177,Spotsylvania,Rappahannock,14205,412,141
+10/07/2021,51179,Stafford,Rappahannock,15292,441,101
+10/07/2021,51181,Surry,Crater,572,30,9
+10/07/2021,51183,Sussex,Crater,1498,57,25
+10/07/2021,51185,Tazewell,Cumberland Plateau,5437,216,94
+10/07/2021,51187,Warren,Lord Fairfax,4648,153,75
+10/07/2021,51191,Washington,Mount Rogers,7152,542,136
+10/07/2021,51193,Westmoreland,Three Rivers,1718,91,31
+10/07/2021,51195,Wise,Lenowisco,4845,220,122
+10/07/2021,51197,Wythe,Mount Rogers,4234,212,90
+10/07/2021,51199,York,Peninsula,5188,122,69
+10/07/2021,51510,Alexandria,Alexandria,13814,611,148
+10/07/2021,51520,Bristol,Mount Rogers,2188,157,45
+10/07/2021,51530,Buena Vista City,Central Shenandoah,1203,30,22
+10/07/2021,51540,Charlottesville,Blue Ridge,5164,143,58
+10/07/2021,51550,Chesapeake,Chesapeake,27797,1257,341
+10/07/2021,51570,Colonial Heights,Chesterfield,2479,92,64
+10/07/2021,51580,Covington,Alleghany,735,33,15
+10/07/2021,51590,Danville,Pittsylvania-Danville,5994,349,175
+10/07/2021,51595,Emporia,Crater,849,55,42
+10/07/2021,51600,Fairfax City,Fairfax,639,49,20
+10/07/2021,51610,Falls Church,Fairfax,526,22,8
+10/07/2021,51620,Franklin City,Western Tidewater,1561,74,40
+10/07/2021,51630,Fredericksburg,Rappahannock,2935,113,25
+10/07/2021,51640,Galax,Mount Rogers,1451,113,60
+10/07/2021,51650,Hampton,Hampton,14510,644,220
+10/07/2021,51660,Harrisonburg,Central Shenandoah,8010,240,101
+10/07/2021,51670,Hopewell,Crater,3592,123,85
+10/07/2021,51678,Lexington,Central Shenandoah,1523,33,33
+10/07/2021,51680,Lynchburg,Central Virginia,11386,441,174
+10/07/2021,51683,Manassas City,Prince William,4936,215,51
+10/07/2021,51685,Manassas Park,Prince William,1262,70,12
+10/07/2021,51690,Martinsville,West Piedmont,1943,183,86
+10/07/2021,51700,Newport News,Peninsula,19809,750,282
+10/07/2021,51710,Norfolk,Norfolk,23571,1459,314
+10/07/2021,51720,Norton,Lenowisco,521,28,12
+10/07/2021,51730,Petersburg,Crater,5119,195,104
+10/07/2021,51735,Poquoson,Peninsula,1266,32,18
+10/07/2021,51740,Portsmouth,Portsmouth,12179,874,228
+10/07/2021,51750,Radford,New River,2831,47,30
+10/07/2021,51760,Richmond City,Richmond,23095,916,322
+10/07/2021,51770,Roanoke City,Roanoke,11534,306,221
+10/07/2021,51775,Salem,Alleghany,3202,91,56
+10/07/2021,51790,Staunton,Central Shenandoah,3273,96,79
+10/07/2021,51800,Suffolk,Western Tidewater,10488,662,223
+10/07/2021,51810,Virginia Beach,Virginia Beach,48259,2510,507
+10/07/2021,51820,Waynesboro,Central Shenandoah,3333,91,42
+10/07/2021,51830,Williamsburg,Peninsula,1099,42,14
+10/07/2021,51840,Winchester,Lord Fairfax,3611,143,52
