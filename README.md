@@ -12,19 +12,19 @@ cases and quarantine status at https://yorkcountyschools.org/parents/studentInfo
 
 The resultant plots are below. (Click on the plots to go to the live maps with annotations.)
 
-* [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](https://drf5n.github.io/YorkCountyCovidMetric_plot.html).
-* [![YCSD Case Metric Daily Time Series](docs/YorkCountyCovidMetric_per_day_plot.png)](https://drf5n.github.io/YorkCountyCovidMetric_per_day_plot.html).
-* [![YCSD Case Metric Time Series](docs/us_covid_states_map.png)](https://drf5n.github.io/us_covid_states_map.html).
-* [![YCSD Case Metric Time Series](docs/va_counties_map.png)](https://drf5n.github.io/va_counties_map.html).
-* [![YCSD Case Metric Time Series](docs/va_counties_map_foreign.png)](https://drf5n.github.io/va_counties_map_foreign.html).
+* [![YCSD Case Metric Time Series](docs/YorkCountyCovidMetric_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html).
+* [![YCSD Case Metric Daily Time Series](docs/YorkCountyCovidMetric_per_day_plot.png)](https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_per_day_plot.html).
+* [![YCSD Case Metric Time Series](docs/us_covid_states_map.png)](https://drf5n.github.io/YCSD_covid_metrics/us_covid_states_map.html).
+* [![YCSD Case Metric Time Series](docs/va_counties_map.png)](https://drf5n.github.io/YCSD_covid_metrics/va_counties_map.html).
+* [![YCSD Case Metric Time Series](docs/va_counties_map_foreign.png)](https://drf5n.github.io/YCSD_covid_metrics/va_counties_map_foreign.html).
 
 
 See these live maps and graphs at https://drf5n.github.io/index.html 
 
-* https://drf5n.github.io/va_counties_map.html -- Virginia Counties colored by CDC Risk of Transmission in Schools category
-* https://drf5n.github.io/va_counties_map_foreign.html -- Virginia Counties colored by CDC Foreign Travel Risk category
-* https://drf5n.github.io/us_covid_states_map.html -- US states colored by CDC foreign country travel risk
-* https://drf5n.github.io/YorkCountyCovidMetric_plot.html -- CDC School Transmission Risk timeseries for York County, VA. 
+* https://drf5n.github.io/YCSD_covid_metrics/va_counties_map.html -- Virginia Counties colored by CDC Risk of Transmission in Schools category
+* https://drf5n.github.io/YCSD_covid_metrics/va_counties_map_foreign.html -- Virginia Counties colored by CDC Foreign Travel Risk category
+* https://drf5n.github.io/YCSD_covid_metrics/us_covid_states_map.html -- US states colored by CDC foreign country travel risk
+* https://drf5n.github.io/YCSD_covid_metrics/YorkCountyCovidMetric_plot.html -- CDC School Transmission Risk timeseries for York County, VA. 
 
 Coloring-wise it is interesting to compare the CDC's risk of foreign travel, the CDC risk of transmission in schools, and the CDC domestic travel maps.
 
