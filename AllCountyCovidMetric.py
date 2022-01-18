@@ -26,7 +26,7 @@
 # -- David Forrest
 # 
 
-# In[1]:
+# In[3]:
 
 
 # %matplotlib widget
@@ -44,14 +44,14 @@ bokeh.io.output_notebook()
 today_str=(datetime.datetime.now()-datetime.timedelta(hours=28)).strftime("%m/%d/%Y")
 
 
-# In[2]:
+# In[4]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[3]:
+# In[5]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -62,7 +62,7 @@ if file_age(df_name) > 86400:
     pathlib(df_name).touch()
 
 
-# In[4]:
+# In[6]:
 
 
 df=pd.read_csv(df_name)
@@ -73,7 +73,7 @@ if not df.iloc[-1]['Report Date'] == today_str:
     df.tail()
 
 
-# In[5]:
+# In[7]:
 
 
 # get the daily and 14 day sums for each locality
@@ -89,7 +89,7 @@ df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 display(df.tail())
 
 
-# In[6]:
+# In[8]:
 
 
 # Use population estimates from https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/ 
@@ -98,20 +98,20 @@ coest['FIPS']=coest['STATE']*1000+coest['COUNTY']
 coest['FIPSstr']=coest['FIPS'].astype(str)
 
 
-# In[7]:
+# In[9]:
 
 
 # subset for Virginia
 coestva=coest[coest['STNAME']=="Virginia"].copy()
 
 
-# In[8]:
+# In[10]:
 
 
 coestva.FIPS.iloc[0]
 
 
-# In[31]:
+# In[11]:
 
 
 pd.set_option('display.max_rows', 500)
@@ -119,7 +119,7 @@ pd.set_option('display.max_rows', 500)
 #display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[10]:
+# In[12]:
 
 
 # Normalize Covid cases by population
@@ -144,13 +144,13 @@ display(today_pop.tail(1))
 #display(today_pop.sort_values(by=['rank']))
 
 
-# In[11]:
+# In[13]:
 
 
 #dfpop[dfpop['Locality']=='Charlottesville']
 
 
-# In[12]:
+# In[14]:
 
 
 # from http://docs.bokeh.org/en/0.11.0/docs/gallery/choropleth.html
@@ -161,7 +161,7 @@ from bokeh.sampledata.us_states import data as states
 from bokeh.sampledata.unemployment import data as unemployment
 
 
-# In[14]:
+# In[15]:
 
 
 
@@ -171,13 +171,13 @@ from bokeh.sampledata.unemployment import data as unemployment
 state_geo = os.path.join('/Users/drf/Downloads/', 'counties.geojson')
 
 
-# In[15]:
+# In[16]:
 
 
 state = geopandas.read_file(state_geo)
 
 
-# In[16]:
+# In[17]:
 
 
 today_pop
@@ -189,11 +189,11 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[17]:
+# In[28]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
-                       bins=[-1,5,20,100,50000],
+                       bins=[-1,50,100,500,50000],
                        labels=[
                            #'Level 1, Low:  All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.',
                            'Level 1, Low:  All travelers should wear a mask,...',
@@ -201,7 +201,7 @@ x['foreign']= pd.cut(x['caseP28P100k'],
                                 'Level 3, High: Travelers should avoid all nonessential travel',
                                 'Level 4, Very High: Travelers should avoid all travel',
                               ]).astype(str)
-x['school']= pd.cut(x['caseP14P100k'],
+x['oldschool']= pd.cut(x['caseP14P100k'],
                        bins=[-1,5,20,50,200,50000],
                        labels=['Lowest risk of transmission in schools',
                                 'Lower risk of transmission in schools',
@@ -209,30 +209,30 @@ x['school']= pd.cut(x['caseP14P100k'],
                                 'Higher risk of transmission in schools',
                                 'Highest risk of transmission in schools',
                               ]).astype(str)
-x['newschool']= pd.cut(x['caseP7P100k'],
+x['school']= pd.cut(x['caseP7P100k'],
                        bins=[-1,10,25,100,50000],
-                       labels=['Low risk of transmission in schools',
-                                'Moderate risk of transmission in schools',
-                                'Substantial risk of transmission in schools',
-                                'High risk of transmission in schools',
+                       labels=['Low risk of transmission',
+                                'Moderate risk of transmission',
+                                'Substantial risk of transmission',
+                                'High risk of transmission',
                               ]).astype(str)
 
 x.tail()
 
 
-# In[18]:
+# In[29]:
 
 
-#x[x['Locality']=='Nelson']
+x[x['CTYNAME']=='York County']
 
 
-# In[19]:
+# In[30]:
 
 
-state.tail()
+#state.tail()
 
 
-# In[32]:
+# In[47]:
 
 
 import branca # for a colorscale
@@ -248,7 +248,7 @@ colorscale = branca.colormap.linear.YlOrRd_09.scale(0, 200)
 colorscale = branca.colormap.linear.YlOrRd_09.to_step(index=[0,5,20,50, 200,500, 1000])
 colorscale = branca.colormap.StepColormap(
     ['blue','green','yellow','orange','red','red','black'], 
-    index=[0,5,20,50,200,250,1000], caption='New Cases/14days/100k',vmin=0, vmax=1000,
+    index=[0,20,50,100,500,550,1000], caption='New Cases/14days/100k',vmin=0, vmax=1000,
 )
 
 
@@ -266,8 +266,8 @@ def style_function14(feature):
     }
 
 colorscale28 = branca.colormap.StepColormap(
-    ['blue','green','yellow','orange','red','red','black'], 
-    index=[0,5,20,50,100,250,1000], caption='New Cases/28days/100k',vmin=0, vmax=1000,
+    ['green','yellow','orange','red','red','black'], 
+    index=[0,50,100,500,510,550,5000], caption='New Cases/28days/100k',vmin=0, vmax=1000,
 ).to_linear()
 colorscale28.caption='New Cases/28days/100k'  # reset caption
 
@@ -284,7 +284,7 @@ def style_function28(feature):
 
 colorscale7 = branca.colormap.StepColormap(
     ['blue','yellow','orange','red','red','black'], 
-    index=[0,10,25,50,125,500], caption='New Cases/7days/100k',vmin=0, vmax=500,
+    index=[0,10,50,100,125,500], caption='New Cases/7days/100k',vmin=0, vmax=500,
 ).to_linear()
 colorscale7.caption='New Cases/7days/100k'  # reset caption
 
@@ -311,13 +311,13 @@ def style_function7(feature):
 #colorscale7b
 
 
-# In[21]:
+# In[32]:
 
 
 colorscale.caption
 
 
-# In[22]:
+# In[39]:
 
 
 
@@ -329,7 +329,7 @@ x.to_file("vaCovidCounties.geojson", driver='GeoJSON')
 m = folium.Map(location=[37.9, -77.9], zoom_start=7)
 
 loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (school colors)"""
-subt = """(Red is CDC >200cases/14days/100k, "Highest Risk of Transmission in schools" and Black is 5x higher)"""
+subt = """(Red is CDC >100cases/7days/100k, "Highest Risk of Transmission" and Black is 5x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
              <h4 align="center" style="font-size:12px"><b>{}</b></h4>
@@ -340,22 +340,22 @@ title_html = '''
 folium.GeoJson(
     "vaCovidCounties.geojson",
     name='geojson',
-    style_function=style_function14,
+    style_function=style_function7,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['Locality','date',"VDH Health District",'caseP7P100k','caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+        fields=['Locality','date',"VDH Health District",'caseP7P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
    #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
    #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
-         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Community Risk','Cases/28d/100kpop','CDC on Travel','Population'],
     ),    
 ).add_to(m)
-m.add_child(colorscale14)
+m.add_child(colorscale7)
 m.get_root().html.add_child(folium.Element(title_html))
 m.save('docs/va_counties_map.html')
 m
 
 
-# In[23]:
+# In[40]:
 
 
 # New CDC school colors (7 day window)
@@ -366,7 +366,7 @@ x.to_file("vaCovidCounties7.geojson", driver='GeoJSON')
 # Make a map out of it:
 m = folium.Map(location=[37.9, -77.9], zoom_start=7)
 
-loc = """Virginia COVID risk per new CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories (school colors)"""
+loc = """Virginia COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/k-12-guidance.html">School</a> Risk Categories (school colors)"""
 subt = """(Red is CDC >100cases/7days/100k, "High Risk of Transmission in schools" and Black is 5x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
@@ -381,19 +381,17 @@ folium.GeoJson(
     style_function=style_function7,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['Locality','date',"VDH Health District",'caseP7P100k','newschool','caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
-   #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
-   #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
-         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','School Risk (feb)','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+        fields=['Locality','date',"VDH Health District",'caseP7P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Community Risk','Cases/28d/100kpop','CDC on Travel','Population'],
     ),    
 ).add_to(m)
-m.add_child(colorscale7b)
+m.add_child(colorscale7)
 m.get_root().html.add_child(folium.Element(title_html))
 m.save('docs/va_counties_map7.html')
 m
 
 
-# In[24]:
+# In[48]:
 
 
 
@@ -420,10 +418,10 @@ folium.GeoJson(
     style_function=style_function28,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['Locality','date',"VDH Health District",'caseP7P100k','caseP14P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
+        fields=['Locality','date',"VDH Health District",'caseP7P100k','school','caseP28P100k','foreign',"POPESTIMATE2019"],
    #         fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
    #     aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
-         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Cases/14d/100kpop','School Risk','Cases/28d/100kpop','CDC on Travel','Population'],
+         aliases=['Locality','Date','VDH District','Cases/7d/100kpop','Community Risk','Cases/28d/100kpop','CDC on Travel','Population'],
     ),    
 ).add_to(m)
 m.add_child(colorscale28)
@@ -432,20 +430,20 @@ m.save('docs/va_counties_map_foreign.html')
 m
 
 
-# In[48]:
+# In[42]:
 
 
 #x.iloc['11775']
 x.loc['51199'][['Locality','caseP7P100k','caseP14P100k','caseP28P100k']]
 
 
-# In[26]:
+# In[43]:
 
 
 #pd.describe_option('display')
 
 
-# In[30]:
+# In[44]:
 
 
 #popxls=pd.read_excel('/Users/drf/Downloads/2018 Pop.xls',header=[3])

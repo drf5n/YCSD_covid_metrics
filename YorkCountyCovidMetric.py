@@ -36,7 +36,7 @@ def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[13]:
+# In[3]:
 
 
 #os.getcwd()
@@ -44,7 +44,7 @@ def file_age(filepath):
 #! pwd ; ls
 
 
-# In[14]:
+# In[4]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -70,7 +70,7 @@ else:
     display(f"{df_name} is up to date at {last_date} versus {datetime.datetime.now()}")
 
 
-# In[4]:
+# In[5]:
 
 
 
@@ -85,7 +85,7 @@ display(df.head())
 display(df.tail())
 
 
-# In[5]:
+# In[6]:
 
 
 # Read VDH population data donwloaded from https://apps.vdh.virginia.gov/HealthStats/stats.htm 
@@ -115,7 +115,6 @@ display("VDH_pop: ",VDH_pop)
 
 
 dfy = df[df['Locality']=='York'].copy()
-dfy['per100k_14daysum']=dfy['TC_sum14']*100000/68280  
 dfy['per100k_14daysum']=dfy['TC_sum14']*100000/VDH_pop
 dfy['per100k_7daysum']=dfy['TC_sum7']*100000/VDH_pop
 
@@ -147,7 +146,7 @@ dfy.tail(30)
 # In[9]:
 
 
-ph = dfy.plot(y='per100k_14daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 14 days")
+ph = dfy.plot(y='per100k_7daysum',x='date',title="York County Number of new cases per 100,000 persons \nwithin the last 7 days")
 
 ph
 
@@ -155,11 +154,11 @@ ph
 # In[10]:
 
 
-ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, 14 day sum, per 100K")
+ph = dfy.plot(y='TC_diff',x='date',title="York County Cases, daily cases, per 100K")
 ph
 
 
-# In[13]:
+# In[11]:
 
 
 TOOLTIPS = [
@@ -171,14 +170,14 @@ TOOLTIPS = [
  #   ("(x,y)", "($x, $y)"),
 ]
 
-vmax = (int(dfy['per100k_14daysum'].max() / 40 )+2)*40 # 
+vmax = (int(dfy['per100k_7daysum'].max() / 40 )+2)*40 # 
 
 #bokeh.plotting.output_file('docs/YorkCountyCovidMetric_plot.html', mode='inline')
 
-per100k_14daysum=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
+per100k_7daysum=bokeh.plotting.figure( tooltips=TOOLTIPS, x_axis_type='datetime')
 p=bokeh.plotting.figure( x_axis_type='datetime',y_range=(0,vmax),
 #                        tooltips=TOOLTIPS,formatters={"$x": "datetime"},
-                        title="{} Number of new cases per 100,000 persons within the last 14 days".format(loi))
+                        title="{} Number of new cases per 100,000 persons within the last 7 days".format(loi))
 
 p.add_layout(bokeh.models.Title(
     text="Code: https://github.com/drf5n/YCSD_covid_metrics", text_font_style="italic"), 'above')
@@ -222,7 +221,7 @@ if metric_span == 7:
 
 
 #p.line(dfy['date'],dfy['per100k_14daysum'])
-p.line(x='date', y='per100k_14daysum',source=dfy)
+p.line(x='date', y='per100k_7daysum',source=dfy)
 #p.title()
 
 #?p.line
@@ -234,17 +233,23 @@ p.line(x='date', y='per100k_14daysum',source=dfy)
 bokeh.plotting.show(p)
 
 
-# In[12]:
+# In[15]:
 
 
 
-bokeh.plotting.save(p,filename="docs/YorkCountyCovidMetric_plot.html")
+bokeh.plotting.save(p,filename="docs/YorkCountyCovidMetric_plot.html",title="Number of new cases per 100,000 persons within the last 7 days")
 
 # needs geckodriver  -- have it in conda env py3plot
 bokeh.io.export_png(p, filename="docs/YorkCountyCovidMetric_plot.png")
 
 
-# In[13]:
+# In[21]:
+
+
+#?bokeh.plottin
+
+
+# In[22]:
 
 
 increase=(748/56.009)
@@ -259,13 +264,14 @@ display(increase, inc_days, increase**(1/inc_days))
 
 
 
-# In[14]:
+# In[38]:
 
 
 TOOLTIPS = [
  #   ("index", "$index"),
  #   ("date:", "$x{%F %T}"),
     ("date:", "@date{%F}"),
+    ("cases/7d/100k","@per100k_7daysum"),
     ("cases/d/100k:","@per100k_1daymean"),    
     ("cases/d/100k_7d:","@per100k_7daymean"),
     ("cases/d/100k_14d:","@per100k_14daymean"),
@@ -307,13 +313,16 @@ pp.add_tools(hth)
 pp.add_layout(bokeh.models.BoxAnnotation(bottom=0,top=10/7, fill_alpha=0.4, fill_color='blue'))
 pp.add_layout(bokeh.models.BoxAnnotation(bottom=10/7,top=49/7, fill_alpha=0.4, fill_color='yellow'))
 pp.add_layout(bokeh.models.BoxAnnotation(bottom=50/7,top=100/7, fill_alpha=0.4, fill_color='orange'))
-pp.add_layout(bokeh.models.BoxAnnotation(bottom=100/7, fill_alpha=0.4, fill_color='red'))
+pp.add_layout(bokeh.models.BoxAnnotation(bottom=100/7, fill_alpha=0.3, fill_color='red'))
 
+
+# https://docs.bokeh.org/en/2.4.1/docs/reference/colors.html?highlight=color%20strings#bokeh-colors-named
 pp.circle(x='date', y='per100k_1daymean',source=dfy,color='black',legend_label="Daily")
-pp.line(x='date', y='per100k_7daymean',source=dfy,color="black",legend_label="/7d")
-pp.line(x='date', y='per100k_14daymean',source=dfy,color='blue',legend_label="/14d")
-pp.line(x='date', y='per100k_28daymean',source=dfy,color='red',legend_label="/28d")
+pp.line(x='date', y='per100k_28daymean',source=dfy,color='red',legend_label="/28d", line_width=2)
+pp.line(x='date', y='per100k_14daymean',source=dfy,color='darkseagreen',legend_label="/14d", line_width=2)
+pp.line(x='date', y='per100k_7daymean',source=dfy,color="black",legend_label="/7d", line_width=1)
 
+pp.legend.location="top_left"
 
 #p.title()
 
@@ -322,7 +331,7 @@ bokeh.plotting.show(pp)
 #?p.line
 
 
-# In[15]:
+# In[ ]:
 
 
 
@@ -332,7 +341,7 @@ print(bokeh.plotting.save(pp,filename="docs/YorkCountyCovidMetric_per_day_plot.h
 bokeh.io.export_png(pp, filename="docs/YorkCountyCovidMetric_per_day_plot.png")
 
 
-# In[16]:
+# In[18]:
 
 
 #?bokeh.plotting.save
