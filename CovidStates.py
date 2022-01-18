@@ -13,12 +13,12 @@
 # 
 # I'm curious how the foreign travel advisory thresholds would look for a US Map.
 # 
-# Based on https://www.cdc.gov/coronavirus/2019-ncov/travelers/how-level-is-determined.html the color scheme is:
+# Based on https://www.cdc.gov/coronavirus/2019-ncov/travelers/how-level-is-determined.html the color scheme is now:
 # 
-# * Dark Red: Very High,  >100cases/28days/100kpop -- Travelers should avoid all travel...
-# * Dark Orange: High, >50cases/28days/100kpop -- Travelers should avoid all nonessential travel...
-# * Light Orange: Moderate, >5cases/28days/100kpop -- Travelers at increased risk for severe illness from COVID-19 should avoid all nonessential travel...
-# * Yellow: Low, <5cases/28days/100kpop -- All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.
+# * Dark Red: Very High,  >500cases/28days/100kpop -- Travelers should avoid all travel...
+# * Dark Orange: High, >100cases/28days/100kpop -- Travelers should avoid all nonessential travel...
+# * Light Orange: Moderate, >50cases/28days/100kpop -- Travelers at increased risk for severe illness from COVID-19 should avoid all nonessential travel...
+# * Yellow: Low, <50cases/28days/100kpop -- All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.
 # 
 # I was successful, and I have posted this notebook on Github at https://github.com/drf5n/YCSD_covid_metrics/blob/master/CovidStates.ipynb with the map published on https://drf5n.github.io/ and https://drf5n.github.io/us_covid_states_map.html  It looks like this:
 # 
@@ -28,7 +28,7 @@
 # 
 # The school transmission risk criteria is 4x more lax, with a the highest risk level allowing twice the cases in half the time: 200cases/14days/100kpop. Under the school criteria, only Vermont, at 174 cases/14days/100kpop, and Hawaii at 99cases/14days/100kpop aren't above the highest risk threshold for school transmission.
 # 
-# -- drf 2020-12-04
+# -- drf 2022-01-18
 
 # In[1]:
 
@@ -75,7 +75,7 @@ pop_augment = pops.set_index('STATE').join(statemaster.set_index('state')['state
 display(pop_augment)
 
 
-# In[5]:
+# In[10]:
 
 
 # Download the state-level covid case histories from... and try to make a dfy from the last data 
@@ -121,6 +121,7 @@ elif  state_source == "CDC":
          ).strftime("%Y%m%d")  # yesterday morning as an int
     display(doi, lastdate)
     df['TC_diff']= df.groupby('state')['total_results_reported'].diff().fillna(0) 
+    df['TC_sum7']= df.groupby('state')['total_results_reported'].diff(7).fillna(0)
     df['TC_sum14']= df.groupby('state')['total_results_reported'].diff(14).fillna(0)
     df['TC_sum28']= df.groupby('state')['total_results_reported'].diff(28).fillna(0)
     dfy = df[df['date']==doi].copy()
@@ -135,14 +136,14 @@ else:
 print(dfy.shape)
 
 
-# In[6]:
+# In[11]:
 
 
 # How fast does the data come in?
 df.groupby(['date'])['state'].count()
 
 
-# In[7]:
+# In[21]:
 
 
 
@@ -152,37 +153,38 @@ dfya = dfy.set_index('state').join(pop_augment.set_index('state_abbr'),lsuffix='
 
 dfya['per100k_14daysum']=dfya['TC_sum14']*100000/dfya['POPESTIMATE2019']
 dfya['per100k_28daysum']=dfya['TC_sum28']*100000/dfya['POPESTIMATE2019']
+dfya['per100k_7daysum']=dfya['TC_sum7']*100000/dfya['POPESTIMATE2019']
 dfya['per100k_1daysum']=dfya['TC_diff']*100000/dfya['POPESTIMATE2019']
 display(dfya.columns)
 
 display(dfya[['state','date','per100k_1daysum','per100k_14daysum', 'per100k_28daysum']])
 
 dfya['foreign']= pd.cut(dfya['per100k_28daysum'],
-                       bins=[-1,5,20,100,50000],
+                       bins=[-1,50,100,500,50000],
                        labels=['Level 1, Low:  All travelers should wear a mask, stay at least 6 feet from people who are not from your household, wash your hands often or use hand sanitizer, and watch your health for signs of illness.',
                                 'Level 2, Moderate: Travelers at increased risk for severe illness from COVID-19 should avoid all nonessential travel.',
                                 'Level 3, High: Travelers should avoid all nonessential travel',
                                 'Level 4, Very High: Travelers should avoid all travel',
                               ]).astype(str)
-dfya['school']= pd.cut(dfya['per100k_14daysum'],
-                       bins=[-1,5,20,50,200,50000],
-                       labels=['Lowest risk of transmission in schools',
-                                'Lower risk of transmission in schools',
-                                'Moderate risk of transmission in schools',
-                                'Higher risk of transmission in schools',
-                                'Highest risk of transmission in schools',
+dfya['school']= pd.cut(dfya['per100k_7daysum'],
+                       bins=[-1,10,50,100,50000],
+                       labels=[
+                                'Lower risk of transmission',
+                                'Moderate risk of transmission',
+                                'Higher risk of transmission',
+                                'Highest risk of transmission',
                               ]).astype(str)
 
 
 display(dfya.head())
 
 file_state_covid='USCovidStates.geojson'
-gjson = state.set_index('id').join(dfya[['state','date','new_results_reported','POPESTIMATE2019','per100k_1daysum','per100k_14daysum', 'per100k_28daysum','foreign','school']].set_index('state'))
+gjson = state.set_index('id').join(dfya[['state','date','new_results_reported','POPESTIMATE2019','per100k_1daysum','per100k_7daysum', 'per100k_28daysum','foreign','school']].set_index('state'))
 gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[8]:
+# In[22]:
 
 
 #Make some colorscales
@@ -190,28 +192,31 @@ display(gjson.head())
 # branca color names are defined in https://raw.githubusercontent.com/python-visualization/branca/master/branca/_cnames.json
 
 colorscale = branca.colormap.linear.YlOrRd_09.scale(0, 200)
-colorscale = branca.colormap.linear.YlOrRd_09.to_step(index=[0,5,20,50, 200,500, 1000])
+colorscale = branca.colormap.linear.YlOrRd_09.to_step(index=[0,50, 100,500, 1000])
 
+# Foreign 50,100,500
 colorscale_28 = branca.colormap.StepColormap(
     ['yellow','orange','darkorange','red','red','#440000'], 
-    index=[0,5,50,100,500,3000], caption='New Cases/28days/100k (red > 100, Very High)',vmin=0, vmax=3000,
+    index=[0,50,100,500,1000,3000], caption='New Cases/28days/100k (red > 500, Very High)',vmin=0, vmax=3000,
 )
 
+# Foreign 50,100,500
 colorscale_28l = branca.colormap.StepColormap(
     ['yellow','orange','darkorange','red','red','#440000'], 
-    index=[0,5,50,100,110,3000], caption='New Cases/28days/100k',vmin=0, vmax=3000,
+    index=[0,50,100,500,510,3000], caption='New Cases/28days/100k',vmin=0, vmax=3000,
 ).to_linear()
 colorscale_28l.caption=colorscale_28.caption
 
-
+# Foreign 50,100,500 -- Nobody;s using 14 days anymore
 colorscale_14 = branca.colormap.StepColormap(
     ['blue','green','yellow','orange','red','darkred','red','black'], 
-    index=[0,5,20,50,200,201,1000,5000], caption='New Cases/14days/100k',vmin=0, vmax=400,
+    index=[0,10,50,100,500,501,1000,5000], caption='New Cases/14days/100k',vmin=0, vmax=400,
 )
 
+# Foreign 50,100,500
 colorscale_1 = branca.colormap.StepColormap(
     ['blue','green','yellow','orange','red','red','red','black'], 
-    index=[0,5,20,50,200,201,1000,5000], caption='New Cases/28days/100k',vmin=0, vmax=400,
+    index=[0,5,20,50,500,501,1000,5000], caption='New Cases/28days/100k',vmin=0, vmax=400,
 )
 
 
@@ -221,7 +226,7 @@ display(colorscale_28l)
 
 
 
-# In[9]:
+# In[23]:
 
 
 # Make a map out of it:
@@ -229,8 +234,8 @@ m = folium.Map(location=[37.9, -90], zoom_start=4)
 
 
 loc = f"""{doi} US States COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
-      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation">School</a> Risk Categories</a>"""
-subt = """(Red is CDC Level 4: >100cases/28days/100k, Very High, Avoid all travel" and Black is 30x higher)"""
+      and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/k-12-guidance.html">School/Community</a> Risk Categories</a>"""
+subt = """(Red is CDC Level 4: >500cases/28days/100k, Very High, Avoid all travel" and Black is 30x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
              <h4 align="center" style="font-size:12px"><b>{}</b></h4>
@@ -256,8 +261,8 @@ folium.GeoJson(
     style_function=style_function_28,
     highlight_function=lambda x: {'weight': 2, 'color':'black', 'fillOpacity': 0.4,},
     tooltip=folium.features.GeoJsonTooltip(
-        fields=['name',"date",'per100k_28daysum','per100k_14daysum',"POPESTIMATE2019",'foreign','school'],
-        aliases=['State','Date','Cases/28d/100kpop','Cases/14d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC School'],),
+        fields=['name',"date",'per100k_28daysum','per100k_7daysum',"POPESTIMATE2019",'foreign','school'],
+        aliases=['State','Date','Cases/28d/100kpop','Cases/7d/100kpop','2019 Population','CDC Foreign Travel Rec.','CDC Community'],),
     
 ).add_to(m)
 m.add_child(colorscale_28l)

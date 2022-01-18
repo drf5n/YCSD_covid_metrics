@@ -28,15 +28,15 @@ See these live maps and graphs at https://drf5n.github.io/index.html
 
 Coloring-wise it is interesting to compare the CDC's risk of foreign travel, the CDC risk of transmission in schools, and the CDC domestic travel maps.
 
-The CDC's risk of foreign travel and CDC risk of transmission in schools are both on a green-to-red continuum, with the foreign travel map being more strict, but the CDC domestic travel is on a light green to blue continuum, showing numbers on a scale 1/28th of the CDC's foreign travel metric.
+The CDC's risk of foreign travel and CDC community transmission are both on a green-to-red continuum, with the foreign travel map being 4x more strict, but the CDC domestic travel is on a scale 1/4th of the CDC's foreign travel metric.
 
-* [CDC Foreign Travel Advisories](https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html) -- Cases/28days/100k
-* [CDC Domestic travel risk](https://covid.cdc.gov/covid-data-tracker/#cases_casesper100klast7days) -- Cases/day/100K
-* [CDC School risk Explanation](https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/indicators.html#interpretation) & as [applied to Virginia Localities](https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/) -- Cases/14days/100k
+* [CDC Foreign Travel Advisories](https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html) -- Cases/28days/100k high = 100 Very High = 500
+* [CDC Domestic travel risk](https://covid.cdc.gov/covid-data-tracker/#cases_casesper100klast7days) -- Cases/7day/100K 100 = High
+* [CDC School risk Explanation](https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/k-12-guidance.html) & as [applied to Virginia Localities](https://www.vdh.virginia.gov/coronavirus/key-measures/pandemic-metrics/school-metrics/) -- Cases/7days/100k High = 100
 
 Side by side, these Foreign, Domestic, and School categories and thresholds maps look like this:
 
 ![CDC Scale Colors](CDCmaps_foreign_domestic_school.png)
 
 
--- Dave Forrest 2020-12-21
+-- Dave Forrest 2022-01-18
