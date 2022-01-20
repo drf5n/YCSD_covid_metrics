@@ -26,7 +26,7 @@
 # -- David Forrest
 # 
 
-# In[3]:
+# In[1]:
 
 
 # %matplotlib widget
@@ -44,14 +44,14 @@ bokeh.io.output_notebook()
 today_str=(datetime.datetime.now()-datetime.timedelta(hours=28)).strftime("%m/%d/%Y")
 
 
-# In[4]:
+# In[2]:
 
 
 def file_age(filepath):
     return time.time() - os.path.getmtime(filepath)
 
 
-# In[5]:
+# In[3]:
 
 
 # get the Virginia COVID Case data from https://data.virginia.gov/Government/VDH-COVID-19-PublicUseDataset-Cases/bre9-aqqr
@@ -62,7 +62,7 @@ if file_age(df_name) > 86400:
     pathlib(df_name).touch()
 
 
-# In[6]:
+# In[4]:
 
 
 df=pd.read_csv(df_name)
@@ -73,7 +73,7 @@ if not df.iloc[-1]['Report Date'] == today_str:
     df.tail()
 
 
-# In[7]:
+# In[5]:
 
 
 # get the daily and 14 day sums for each locality
@@ -89,7 +89,7 @@ df['TC_sum28']= df.groupby('Locality')['Total Cases'].diff(28).fillna(0)
 display(df.tail())
 
 
-# In[8]:
+# In[6]:
 
 
 # Use population estimates from https://www2.census.gov/programs-surveys/popest/datasets/2010-2019/counties/totals/ 
@@ -98,20 +98,20 @@ coest['FIPS']=coest['STATE']*1000+coest['COUNTY']
 coest['FIPSstr']=coest['FIPS'].astype(str)
 
 
-# In[9]:
+# In[7]:
 
 
 # subset for Virginia
 coestva=coest[coest['STNAME']=="Virginia"].copy()
 
 
-# In[10]:
+# In[8]:
 
 
 coestva.FIPS.iloc[0]
 
 
-# In[11]:
+# In[9]:
 
 
 pd.set_option('display.max_rows', 500)
@@ -119,7 +119,7 @@ pd.set_option('display.max_rows', 500)
 #display(coestva[['FIPS','CTYNAME','POPESTIMATE2019']])
 
 
-# In[12]:
+# In[10]:
 
 
 # Normalize Covid cases by population
@@ -144,13 +144,13 @@ display(today_pop.tail(1))
 #display(today_pop.sort_values(by=['rank']))
 
 
-# In[13]:
+# In[11]:
 
 
 #dfpop[dfpop['Locality']=='Charlottesville']
 
 
-# In[14]:
+# In[12]:
 
 
 # from http://docs.bokeh.org/en/0.11.0/docs/gallery/choropleth.html
@@ -161,7 +161,7 @@ from bokeh.sampledata.us_states import data as states
 from bokeh.sampledata.unemployment import data as unemployment
 
 
-# In[15]:
+# In[13]:
 
 
 
@@ -171,13 +171,13 @@ from bokeh.sampledata.unemployment import data as unemployment
 state_geo = os.path.join('/Users/drf/Downloads/', 'counties.geojson')
 
 
-# In[16]:
+# In[14]:
 
 
 state = geopandas.read_file(state_geo)
 
 
-# In[17]:
+# In[15]:
 
 
 today_pop
@@ -189,7 +189,7 @@ x = state.set_index('GEOID').join(today_pop.set_index("FIPSstr"))
 display(x.tail())
 
 
-# In[28]:
+# In[16]:
 
 
 x['foreign']= pd.cut(x['caseP28P100k'],
@@ -220,19 +220,19 @@ x['school']= pd.cut(x['caseP7P100k'],
 x.tail()
 
 
-# In[29]:
+# In[17]:
 
 
 x[x['CTYNAME']=='York County']
 
 
-# In[30]:
+# In[18]:
 
 
 #state.tail()
 
 
-# In[47]:
+# In[19]:
 
 
 import branca # for a colorscale
@@ -311,13 +311,13 @@ def style_function7(feature):
 #colorscale7b
 
 
-# In[32]:
+# In[20]:
 
 
 colorscale.caption
 
 
-# In[39]:
+# In[21]:
 
 
 
@@ -355,7 +355,7 @@ m.save('docs/va_counties_map.html')
 m
 
 
-# In[40]:
+# In[22]:
 
 
 # New CDC school colors (7 day window)
@@ -391,7 +391,7 @@ m.save('docs/va_counties_map7.html')
 m
 
 
-# In[48]:
+# In[23]:
 
 
 

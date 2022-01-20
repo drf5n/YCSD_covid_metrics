@@ -24,9 +24,9 @@
 # 
 # ![image.png](attachment:02decef1-273c-419d-a7ac-87761f332983.png)
 # 
-# Every single state in the US is above the 100cases/28days/100kpop level of COVID transmission that, for CDC foreign travel advisories, is in the "Level 4, Very High: Travelers should avoid all travel" range.  
+# Every single state in the US is above the 500cases/28days/100kpop level of COVID transmission that, for CDC foreign travel advisories, is in the "Level 4, Very High: Travelers should avoid all travel" range.  
 # 
-# The school transmission risk criteria is 4x more lax, with a the highest risk level allowing twice the cases in half the time: 200cases/14days/100kpop. Under the school criteria, only Vermont, at 174 cases/14days/100kpop, and Hawaii at 99cases/14days/100kpop aren't above the highest risk threshold for school transmission.
+# The community/school transmission risk criteria is 20% more strict, with a the highest risk level allowing 1/5 the cases in 1/4 the time: 100cases/7days/100kpop.
 # 
 # -- drf 2022-01-18
 
@@ -75,7 +75,7 @@ pop_augment = pops.set_index('STATE').join(statemaster.set_index('state')['state
 display(pop_augment)
 
 
-# In[10]:
+# In[5]:
 
 
 # Download the state-level covid case histories from... and try to make a dfy from the last data 
@@ -136,14 +136,14 @@ else:
 print(dfy.shape)
 
 
-# In[11]:
+# In[6]:
 
 
 # How fast does the data come in?
 df.groupby(['date'])['state'].count()
 
 
-# In[21]:
+# In[7]:
 
 
 
@@ -184,7 +184,7 @@ gjson.to_file(file_state_covid, driver='GeoJSON')
 display(gjson.head())
 
 
-# In[22]:
+# In[8]:
 
 
 #Make some colorscales
@@ -226,7 +226,7 @@ display(colorscale_28l)
 
 
 
-# In[23]:
+# In[9]:
 
 
 # Make a map out of it:
@@ -235,7 +235,7 @@ m = folium.Map(location=[37.9, -90], zoom_start=4)
 
 loc = f"""{doi} US States COVID risk per CDC <a href="https://www.cdc.gov/coronavirus/2019-ncov/travelers/map-and-travel-notices.html">Foreign Travel</a> 
       and <a href="https://www.cdc.gov/coronavirus/2019-ncov/community/schools-childcare/k-12-guidance.html">School/Community</a> Risk Categories</a>"""
-subt = """(Red is CDC Level 4: >500cases/28days/100k, Very High, Avoid all travel" and Black is 30x higher)"""
+subt = """(Red is CDC Level 4: >500cases/28days/100k, Very High, Avoid all travel" and Black is 10x higher)"""
 title_html = '''
              <h3 align="center" style="font-size:16px"><b>{}</b></h3>
              <h4 align="center" style="font-size:12px"><b>{}</b></h4>
