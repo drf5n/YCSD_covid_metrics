@@ -1,5 +1,13 @@
 # YCSD_covid_metrics
 
+On 2022-02-25, the CDC updated the commuity levels criteria and
+thresholds a
+https://www.cdc.gov/coronavirus/2019-ncov/science/community-levels.html
+I've not updated the colors here, since the new colors depend on
+primarily on hopitalizaion and beds, which is more difficult data to
+extract. -- drf5n
+
+
 These Jupyter notebooks aim to understand the data behind https://ycsd.yorkcountyschools.org/domain/1313 
 that is derived from the data behind these sources:
 
